@@ -2,7 +2,7 @@
 
 ## The UBC Calendar
 
-This application will allow the user to upload their list of courses provided by Workday, and will auto-generate a calendar, showing class times for each day, as well as a map that visualises where each class is. It is also able to detect classes that may be too close together in time, and give a warning. The user can also add additional things they have to do each day (such as a Gym time, working with group time, etc.), and the calendar will display this too.
+This application will allow the user to upload their list of courses provided by Workday, and will auto-generate a calendar, showing class times for each day, as well as a map that visualises where each class is. It is also able to detect classes that may be too close together in time, and give a warning. The user can also add extracurriculars, and the calendar will display this too.  
 
 Any UBC student who wants a fast and easy to use calendar for their classes each day can use this program. 
 
