@@ -9,7 +9,7 @@ public class Calendar {
     private ArrayList<Course> courses;
     private ArrayList<Extracurricular> extras;
 
-    public Calendar() {
+    public Calendar(String name) {
     }
 
     //REQUIRES: The CSV file of registered courses as created by Workday
@@ -19,23 +19,13 @@ public class Calendar {
     }
     
     //MODIFIES: this
-    //EFFECTS: adds course to Calendar
-    public void addCourse(Course course) {
+    //EFFECTS: adds item to Calendar
+    public void addItem(CalendarItem item) {
     }
 
     //MODIFIES: this
-    //EFFECTS: removes course from Calendar
-    public void removeCourse(Course course) {
-    }
-
-    //MODIFIES: this
-    //EFFECTS: adds extracurricular to Calendar
-    public void addExtra(Extracurricular extra) {
-    }
-
-    //MODIFIES: this
-    //EFFECTS: removes extracurricular from Calendar
-    public void removeExtra(Extracurricular extra) {
+    //EFFECTS: removes item from Calendar
+    public void removeItem(CalendarItem item) {
     }
 
     public String getName(){
