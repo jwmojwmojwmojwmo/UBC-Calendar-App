@@ -1,13 +1,13 @@
 package model;
 
 import java.io.*;
+import java.time.LocalTime;
 import java.util.*;
 
-//Represents a Calendar with a name and list of courses and extracurriculars
+//Represents a Calendar with a name
 public class Calendar {
+
     private String name;
-    private ArrayList<Course> courses;
-    private ArrayList<Extracurricular> extras;
 
     public Calendar(String name) {
     }
@@ -28,15 +28,25 @@ public class Calendar {
     public void removeItem(CalendarItem item) {
     }
 
-    public String getName(){
+    //MODIFIES: this
+    //EFFECTS: changes Calendar name to given name
+    public void changeName(String name) {
+    }
+
+    //EFFECTS: returns the item at the given day and time, or returns "no item at that time"
+    public String getItemAt(Day day, LocalTime time) {
         return null;
     }
 
-    public ArrayList<Course> getCourses() {
+    public String getName() {
         return null;
     }
 
-    public ArrayList<Extracurricular> getExtras() {
+    public ArrayList<String> getCourses() {
+        return null;
+    }
+
+    public ArrayList<String> getExtras() {
         return null;
     }
 }
