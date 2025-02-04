@@ -23,6 +23,10 @@ public class TestCalendarItem {
 
     @Test
     void testConstructor() {
+        assertEquals("Math", testCourse.getName());
+        assertEquals("10:30", testCourse.getstartTime());
+        assertEquals("12:30", testCourse.getEndTime());
+        assertEquals("IRC", testCourse.getLocation());
     }
 
     @Test
@@ -34,29 +38,22 @@ public class TestCalendarItem {
 
     @Test
     void testChangeStartTime() {
+        assertEquals("17:30", testExtra.getstartTime());
+        testExtra.changeStartTime(LocalTime.of(9,0));
+        assertEquals("9:00", testExtra.getstartTime());
     }
 
     @Test
     void testChangeEndTime() {
+        assertEquals("20:00", testExtra.getEndTime());
+        testExtra.changeEndTime(LocalTime.of(23,0));
+        assertEquals("23:00", testExtra.getEndTime());
     }
 
     @Test
     void testChangeLocation() {
-    }
-
-    @Test
-    void testGetName() {
-    }
-
-    @Test
-    void testGetStartTime() {
-    }
-
-    @Test
-    void testGetEndTime() {
-    }
-
-    @Test
-    void getLocation() {
+        assertEquals("IRC", testCourse.getLocation());
+        testCourse.changeLocation("GEOG");
+        assertEquals("GEOG", testCourse.getLocation());
     }
 }

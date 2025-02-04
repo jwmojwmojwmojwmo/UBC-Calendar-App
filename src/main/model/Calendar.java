@@ -17,36 +17,18 @@ public class Calendar {
     public Course addCourses(File courses) {
         return null;
     }
-    
-    //MODIFIES: this
-    //EFFECTS: adds item to Calendar
-    public void addItem(CalendarItem item) {
-    }
-
-    //MODIFIES: this
-    //EFFECTS: removes item from Calendar
-    public void removeItem(CalendarItem item) {
-    }
 
     //MODIFIES: this
     //EFFECTS: changes Calendar name to given name
     public void changeName(String name) {
     }
 
-    //EFFECTS: returns the item at the given day and time, or returns "no item at that time"
+    //EFFECTS: returns the item at the given day and time, or returns "Nothing found!"
     public String getItemAt(Day day, LocalTime time) {
         return null;
     }
 
     public String getName() {
-        return null;
-    }
-
-    public ArrayList<String> getCourses() {
-        return null;
-    }
-
-    public ArrayList<String> getExtras() {
         return null;
     }
 }

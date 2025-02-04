@@ -25,7 +25,7 @@ public class CalendarItem {
     }
 
     //MODIFIES: this
-    //REQUIRES: time is a valid time
+    //REQUIRES: time is a valid time after the start time
     //EFFECTS: changes end time of item to given time
     public void changeEndTime(LocalTime time) {
     }

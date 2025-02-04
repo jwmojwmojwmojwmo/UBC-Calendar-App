@@ -12,12 +12,22 @@ public class Day {
     public Day(DayOfWeek day, ArrayList<CalendarItem> items) {
     }
 
-    //EFFECTS: returns time intervals where there are items on the calendar
+    //MODIFIES: this
+    //EFFECTS: adds item to this day
+    public void addItem(CalendarItem item) {
+    }
+
+    //MODIFIES: this
+    //EFFECTS: removes item from this day
+    public void removeItem(CalendarItem item) {
+    }
+
+    //EFFECTS: returns time intervals where there are items on the calendar, or "Not busy today!"
     public String getBusyTimes() {
         return null;
     }
 
-    public String getDay() {
+    public DayOfWeek getDay() {
         return null;
     }
 
