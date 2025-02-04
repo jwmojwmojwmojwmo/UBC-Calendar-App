@@ -18,6 +18,7 @@ public class Day {
     }
 
     //MODIFIES: this
+    //REQUIRES: item exists in day
     //EFFECTS: removes item from this day
     public void removeItem(CalendarItem item) {
     }
@@ -28,10 +29,14 @@ public class Day {
     }
 
     public DayOfWeek getDay() {
-        return null;
+        return day;
     }
 
     public ArrayList<String> getItems() {
-        return null;
+        ArrayList<String> stringItems = new ArrayList<String>();
+        for (CalendarItem item : items) {
+            stringItems.add(item.toString());
+        }
+        return stringItems;
     }
 }
