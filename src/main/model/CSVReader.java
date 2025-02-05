@@ -3,6 +3,8 @@ package model;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Map.Entry;
 
 //A class that handles reading data from a CSV and passing into Course to create courses
 public class CSVReader {
@@ -12,6 +14,13 @@ public class CSVReader {
     LocalTime courseStart;
     LocalTime courseEnd;
     String courseLocation;
+    final Map<String, DayOfWeek> dayMap = Map.of(
+        "Mon", DayOfWeek.MONDAY,
+        "Tue", DayOfWeek.TUESDAY,
+        "Wed", DayOfWeek.WEDNESDAY,
+        "Thu", DayOfWeek.THURSDAY,
+        "Fri", DayOfWeek.FRIDAY
+    );
     
     public CSVReader(String name, String info) {
         courseName = name;
@@ -22,6 +31,12 @@ public class CSVReader {
     //EFFECTS: converts courseInfo into the course's days, start and end times, and location,
     //and passes it to course to create a course
     public void convert() {
+        for (Entry<String, DayOfWeek> entry: dayMap.entrySet()) {
+            if (courseInfo.contains(entry.getKey())) {
+                courseDays.add(entry.getValue());
+            }
+        }
+
     }
 
     public String getCourseName() {

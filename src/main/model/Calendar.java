@@ -16,12 +16,7 @@ public class Calendar {
     //MOFDIFIES: this
     //REQUIRES: The file path must lead to a CSV of registered courses as created by Workday
     //EFFECTS: Convert CSV file into a list of courses and adds courses to Calendar
-    public void addCourses(File courses) throws FileNotFoundException {
-
-        Scanner inputScanner = new Scanner(System.in);
-        System.out.println("Enter file path: ");
-        String filePath = inputScanner.nextLine();
-        inputScanner.close();
+    public void addCourses(String filePath) throws FileNotFoundException {
         File csvFile = new File(filePath);
         Scanner csvReader = new Scanner(csvFile);
 
