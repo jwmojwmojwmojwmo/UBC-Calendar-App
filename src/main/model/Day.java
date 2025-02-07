@@ -32,10 +32,10 @@ public class Day {
         return day;
     }
 
-    public ArrayList<String> getItems() {
-        ArrayList<String> stringItems = new ArrayList<String>();
+    public ArrayList<CalendarItem> getItems() {
+        ArrayList<CalendarItem> stringItems = new ArrayList<CalendarItem>();
         for (CalendarItem item : items) {
-            stringItems.add(item.toString());
+            stringItems.add(item);
         }
         return stringItems;
     }

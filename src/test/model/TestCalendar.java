@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -12,18 +14,30 @@ public class TestCalendar {
     Calendar testCalendar1;
     Calendar testCalendar2;
     CalendarItem testCourse;
-    Day Monday = new Day(DayOfWeek.MONDAY, new ArrayList<>());
+    CalendarItem testCSVCourse;
+    ArrayList<CalendarItem> testList = new ArrayList<CalendarItem>();
+    Day Monday = new Day(DayOfWeek.MONDAY, testList);
 
     @BeforeEach
     void runBefore() {
         testCalendar1 = new Calendar("test");
         testCalendar2 = new Calendar("jwmo");
         testCourse = new Course("Math", LocalTime.of(13,0), LocalTime.of(14,0), "BUCH");
+        testCSVCourse = new Course("CPSC_V 210-202 - Software Construction", LocalTime.of(11,0), LocalTime.of(12,0), "LIFE");
         Monday.addItem(testCourse);
     }
 
     @Test
     void testAddCourses() {
+        try {
+            Monday.removeItem(testCourse);
+            File file = new File("src\\test\\model\\TestCSVFile.csv");
+            testCalendar1.addCourses(file.getAbsolutePath());
+            testList.add(testCSVCourse);
+            assertEquals(testList, Monday.getItems());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test

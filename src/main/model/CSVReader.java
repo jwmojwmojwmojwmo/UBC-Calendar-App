@@ -37,6 +37,9 @@ public class CSVReader {
             }
         }
 
+        int index1 = courseInfo.indexOf("|", courseInfo.indexOf("|") + 1);
+        int index2 = courseInfo.indexOf("|", index1 + 1);
+        courseInfo.substring(index1 + 1, index2).trim();
     }
 
     public String getCourseName() {

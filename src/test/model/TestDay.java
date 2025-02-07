@@ -52,4 +52,13 @@ public class TestDay {
         monday.addItem(testCourse);
         assertEquals("10:30 - 12:30", monday.getBusyTimes());
     }
+
+    @Test
+    void testGetItems() {
+        assertEquals(testList, monday.getItems());
+        testList.add(testCourse);
+        assertFalse(monday.getItems().equals(testList));
+        monday.addItem(testCourse);
+        assertEquals(testList, monday.getItems());
+    }
 }
