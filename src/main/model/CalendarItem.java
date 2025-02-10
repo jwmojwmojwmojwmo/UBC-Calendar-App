@@ -1,6 +1,5 @@
 package model;
 
-import java.time.DayOfWeek;
 import java.time.LocalTime;
 
 //Represents an item on a calendar

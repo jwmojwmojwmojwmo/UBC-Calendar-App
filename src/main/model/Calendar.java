@@ -2,7 +2,6 @@ package model;
 
 import java.io.*;
 import java.time.DayOfWeek;
-import java.time.LocalTime;
 import java.util.*;
 
 //Represents a Calendar with a name
