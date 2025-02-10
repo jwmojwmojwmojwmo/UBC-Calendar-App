@@ -1,6 +1,7 @@
 package model;
 
 import java.io.*;
+import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -8,6 +9,12 @@ import java.util.*;
 public class Calendar {
 
     private String name;
+
+    static Day Monday = new Day(DayOfWeek.MONDAY);
+    static Day Tuesday = new Day(DayOfWeek.TUESDAY);
+    static Day Wednesday = new Day(DayOfWeek.WEDNESDAY);
+    static Day Thursday = new Day(DayOfWeek.THURSDAY);
+    static Day Friday = new Day(DayOfWeek.FRIDAY);
 
     public Calendar(String name) {
         this.name = name;
@@ -20,7 +27,7 @@ public class Calendar {
         File csvFile = new File(filePath);
         Scanner csvReader = new Scanner(csvFile);
 
-        for(int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++) {
             csvReader.nextLine();
         }
 
@@ -28,16 +35,11 @@ public class Calendar {
             String line = csvReader.nextLine();
             String[] rows = line.split(",");
             if (rows.length > 7) {
-                CSVReader read = new CSVReader(rows[4].trim(), rows[7].trim());
+                ReadCSV read = new ReadCSV(rows[4].trim(), rows[7].trim());
                 read.convert();
             }
         }
         csvReader.close();
-    }
-
-    //EFFECTS: returns the item at the given day and time, or returns "Nothing found!"
-    public String getItemAt(Day day, LocalTime time) {
-        return null;
     }
     
     //MODIFIES: this

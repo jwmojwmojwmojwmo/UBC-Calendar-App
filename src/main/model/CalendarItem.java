@@ -1,5 +1,6 @@
 package model;
 
+import java.time.DayOfWeek;
 import java.time.LocalTime;
 
 //Represents an item on a calendar
@@ -47,12 +48,12 @@ public class CalendarItem {
         return name;
     }
 
-    public String getstartTime() {
-        return startTime.toString();
+    public LocalTime getStartTime() {
+        return startTime;
     }
 
-    public String getEndTime() {
-        return endTime.toString();
+    public LocalTime getEndTime() {
+        return endTime;
     }
 
     public String getLocation() {

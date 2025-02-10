@@ -16,7 +16,7 @@ public class TestCalendar {
     CalendarItem testCourse;
     CalendarItem testCSVCourse;
     ArrayList<CalendarItem> testList = new ArrayList<CalendarItem>();
-    Day Monday = new Day(DayOfWeek.MONDAY, testList);
+    Day Monday = new Day(DayOfWeek.MONDAY);
 
     @BeforeEach
     void runBefore() {
@@ -30,11 +30,12 @@ public class TestCalendar {
     @Test
     void testAddCourses() {
         try {
-            Monday.removeItem(testCourse);
-            File file = new File("src\\test\\model\\TestCSVFile.csv");
-            testCalendar1.addCourses(file.getAbsolutePath());
-            testList.add(testCSVCourse);
-            assertEquals(testList, Monday.getItems());
+            assertEquals(new ArrayList<CalendarItem>(), Calendar.Monday.getItems());
+            testCalendar1.addCourses("src\\test\\model\\TestCSVFile.csv");
+            assertEquals("CPSC_V 210-202 - Software Construction", Calendar.Monday.getItems().get(0).getName());
+            assertEquals(LocalTime.of(11,0), Calendar.Monday.getItems().get(0).getStartTime());
+            assertEquals(LocalTime.of(12,0), Calendar.Monday.getItems().get(0).getEndTime());
+            assertEquals("LIFE", Calendar.Monday.getItems().get(0).getLocation());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -50,16 +51,6 @@ public class TestCalendar {
     void testChangeName() {
         testCalendar1.changeName("test2");
         assertEquals("test2", testCalendar1.getName());
-    }
-
-    @Test
-    void testGetItemAt() {
-        assertEquals("Nothing found!", testCalendar1.getItemAt(Monday, LocalTime.of(0,0)));
-        assertEquals("Math", testCalendar1.getItemAt(Monday, LocalTime.of(13,0)));
-        assertEquals("Math", testCalendar1.getItemAt(Monday, LocalTime.of(14,0)));
-        assertEquals("Math", testCalendar1.getItemAt(Monday, LocalTime.of(13,30)));
-        assertEquals("Nothing found!", testCalendar1.getItemAt(Monday, LocalTime.of(12,59)));
-        assertEquals("Nothing found!", testCalendar1.getItemAt(Monday, LocalTime.of(14,1)));
     }
 
     @Test

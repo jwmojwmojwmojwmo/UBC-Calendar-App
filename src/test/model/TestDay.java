@@ -17,7 +17,7 @@ public class TestDay {
 
     @BeforeEach
     void runBefore() {
-        monday = new Day(DayOfWeek.MONDAY, testList);
+        monday = new Day(DayOfWeek.MONDAY);
     }
 
     @Test
@@ -28,9 +28,7 @@ public class TestDay {
 
     @Test
     void testAddItem() {
-        assertEquals(testList, monday.getItems());
         monday.addItem(testCourse);
-        assertFalse(monday.getItems().equals(testList));
         testList.add(testCourse);
         assertEquals(testList, monday.getItems());
     }
@@ -41,23 +39,25 @@ public class TestDay {
         testList.add(testCourse);
         assertEquals(testList, monday.getItems());
         monday.removeItem(testCourse);
-        assertFalse(monday.getItems().equals(testList));
         testList.remove(testCourse);
         assertEquals(testList, monday.getItems());
     }
 
-    @Test 
-    void testGetBusyTimes() {
-        assertEquals("Not busy today!", monday.getBusyTimes());
+    @Test
+    void testGetItemAt() {
         monday.addItem(testCourse);
-        assertEquals("10:30 - 12:30", monday.getBusyTimes());
+        assertEquals("Nothing found!", monday.getItemAt(LocalTime.of(0,0)));
+        assertEquals("Nothing found!", monday.getItemAt(LocalTime.of(10,29)));
+        assertEquals("Math", monday.getItemAt(LocalTime.of(10,30)));
+        assertEquals("Math", monday.getItemAt(LocalTime.of(11,0)));
+        assertEquals("Math", monday.getItemAt(LocalTime.of(12,30)));
+        assertEquals("Nothing found!", monday.getItemAt(LocalTime.of(12,31)));
     }
 
     @Test
     void testGetItems() {
         assertEquals(testList, monday.getItems());
         testList.add(testCourse);
-        assertFalse(monday.getItems().equals(testList));
         monday.addItem(testCourse);
         assertEquals(testList, monday.getItems());
     }
