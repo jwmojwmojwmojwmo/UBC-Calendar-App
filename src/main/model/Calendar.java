@@ -1,8 +1,11 @@
 package model;
 
-import java.io.*;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.time.DayOfWeek;
-import java.util.*;
+import java.util.Scanner;
+
 
 //Represents a Calendar with a name
 public class Calendar {
