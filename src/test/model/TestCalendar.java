@@ -21,8 +21,9 @@ public class TestCalendar {
     void runBefore() {
         testCalendar1 = new Calendar("test");
         testCalendar2 = new Calendar("jwmo");
-        testCourse = new Course("Math", LocalTime.of(13,0), LocalTime.of(14,0), "BUCH");
-        testCSVCourse = new Course("CPSC_V 210-202 - Software Construction", LocalTime.of(11,0), LocalTime.of(12,0), "LIFE");
+        testCourse = new Course("Math", LocalTime.of(13, 0), LocalTime.of(14, 0), "BUCH");
+        testCSVCourse = new Course("CPSC_V 210-202 - Software Construction", LocalTime.of(11, 0), LocalTime.of(12, 0),
+                "LIFE");
         Monday.addItem(testCourse);
     }
 
@@ -32,11 +33,21 @@ public class TestCalendar {
             assertEquals(new ArrayList<CalendarItem>(), Calendar.daysOfWeek.get(0).getItems());
             testCalendar1.addCourses("src\\test\\model\\TestCSVFile.csv");
             assertEquals("CPSC_V 210-202", Calendar.daysOfWeek.get(0).getItems().get(0).getName());
-            assertEquals(LocalTime.of(11,0), Calendar.daysOfWeek.get(0).getItems().get(0).getStartTime());
-            assertEquals(LocalTime.of(12,0), Calendar.daysOfWeek.get(0).getItems().get(0).getEndTime());
+            assertEquals(LocalTime.of(11, 0), Calendar.daysOfWeek.get(0).getItems().get(0).getStartTime());
+            assertEquals(LocalTime.of(12, 0), Calendar.daysOfWeek.get(0).getItems().get(0).getEndTime());
             assertEquals("LIFE", Calendar.daysOfWeek.get(0).getItems().get(0).getLocation());
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void testBrokenAddCourses() {
+        try {
+            testCalendar2.addCourses("src\\test\\model\\TestBrokenCSVFile.csv");
+            for (Day day : Calendar.daysOfWeek) {
+                assertEquals(0, day.getItems().size());
+            }
+        } catch (FileNotFoundException e) {
         }
     }
 

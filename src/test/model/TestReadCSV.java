@@ -9,7 +9,7 @@ import java.time.DayOfWeek;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class TestCSVReader {
+public class TestReadCSV {
     String testCourseName = "CPSC210-202 - Software Construction";
     String testCourseInfo1 = "\"2025-01-06 - 2025-02-14 | Mon Wed Fri | 11:00 a.m. - 12:00 p.m. | LIFE-Floor 2-Room 2201";
     String testCourseInfo2 = "\"2025-01-06 - 2025-02-14 | Tue Thu | 11:00 a.m. - 12:00 p.m. | LIFE-Floor 2-Room 2201";

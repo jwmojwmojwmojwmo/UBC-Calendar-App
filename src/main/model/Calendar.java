@@ -36,7 +36,7 @@ public class Calendar {
         while (csvReader.hasNextLine()) {
             String line = csvReader.nextLine();
             String[] rows = line.split(",");
-            if (rows.length > 4 && rows[4].trim().length() > 5 && rows[1].trim().length() > 3) {
+            if (rows.length > 4 && rows[4].trim().length() > 15 && rows[1].trim().length() > 3) {
                 ReadCSV read = new ReadCSV(rows[1].trim(), rows[4].trim());
                 System.out.println(rows[1].trim() + rows[4].trim());
                 read.convert();
