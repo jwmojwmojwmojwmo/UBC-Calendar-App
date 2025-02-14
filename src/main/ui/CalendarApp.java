@@ -120,7 +120,7 @@ public class CalendarApp {
     }
 
     private void getItemAt(String day, String time) {
-        System.out.println(Calendar.daysOfWeek.get(Integer.valueOf(day)).getItemAt(LocalTime.parse(time, format))); 
+        System.out.println(Calendar.daysOfWeek.get(Integer.valueOf(day) - 1).getItemAt(LocalTime.parse(time, format))); 
         waitForUser();
     }
 
