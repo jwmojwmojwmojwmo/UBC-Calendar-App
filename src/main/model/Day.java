@@ -32,6 +32,13 @@ public class Day {
         items.remove(item);
     }
 
+    // MODIFIES: this
+    // REQUIRES: index exists in day
+    // EFFECTS: removes item at given index from this day
+    public void removeItem(int index) {
+        items.remove(index);
+    }
+
     //EFFECTS: returns the item at the given day and time, or returns "Nothing found!"
     public String getItemAt(LocalTime time) {
         for (CalendarItem item : items) {
@@ -41,6 +48,16 @@ public class Day {
             }
         }
         return "Nothing found!";
+    }
+
+    //EFFECTS: returns the index of the item with the given name in the given day, or returns -1
+    public Integer getItemCalled(String name) {
+        for (int i = 0; i < getItems().size(); i++) {
+            if (getItems().get(i).getName().equals(name)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     //MODIFIES: this

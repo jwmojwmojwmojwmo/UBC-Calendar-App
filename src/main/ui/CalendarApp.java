@@ -90,10 +90,10 @@ public class CalendarApp {
         } catch (IndexOutOfBoundsException e) {
             System.out.println(
                     "Number too big! Days of week are between 1-5, with 1 being Monday.");
+            System.out.println("Enter anything to continue.");
             pause = userInput.next();
         } catch (DateTimeParseException e) {
-            System.out.println("Invalid date!");
-        } finally {
+            System.out.println("Invalid time!");
             System.out.println("Enter anything to continue.");
             pause = userInput.next();
         }
@@ -126,8 +126,13 @@ public class CalendarApp {
     // MODIFIES: this
     // EFFECTS: edits the given item based on the user's input
     private void editItem(String name) {
+        ArrayList<Day> days = daysOfItem(name);
+        Integer index = days.get(0).getItemCalled(name);
+        CalendarItem item = days.get(0).getItems().get(index);
+        String oldName = item.getName();
         System.out
                 .println("For any information that should not be changed, type \"same\" without the quotation marks.");
+        System.out.println("If you would like to remove this item, enter \"REMOVE\" into the next line:");
         System.out.print("Enter the new days of the week numerically, separated by commas (ex: \"1, 3, 5\"): ");
         String newDays = userInput.nextLine();
         System.out.print("Enter new name: ");
@@ -137,54 +142,34 @@ public class CalendarApp {
             pause = userInput.next();
             return;
         }
+        if (newName.equals("same")) {
+            newName = item.getName();
+        }
         System.out.print("Enter the new start time: ");
         String newStartTime = userInput.nextLine();
+        if (newStartTime.equals("same")) {
+            newStartTime = item.getStartTime().toString();
+        }
         System.out.print("Enter the new end time: ");
         String newEndTime = userInput.nextLine();
+        if (newEndTime.equals("same")) {
+            newEndTime = item.getEndTime().toString();
+        }
         System.out.print("Enter the new location: ");
         String newLocation = userInput.nextLine();
-        for (Day day : Calendar.daysOfWeek) {
-            for (CalendarItem item : day.getItems()) {
-                if (item.getName().equals(name)) {
-                    if (newName.equals("same")) {
-                        continue;
-                    } else {
-                        item.changeName(newName);
-                    }
-                    if (newStartTime.equals("same")) {
-                        continue;
-                    } else {
-                        item.changeStartTime(LocalTime.parse(newStartTime, format));
-                    }
-                    if (newEndTime.equals("same")) {
-                        continue;
-                    } else {
-                        item.changeEndTime(LocalTime.parse(newEndTime, format));
-                    }
-                    if (newLocation.equals("same")) {
-                        continue;
-                    } else {
-                        item.changeLocation(newLocation);
-                    }
-                    if (newDays.equals("same")) {
-                        continue;
-                    } else {
-                        changeDays(item, newDays);
-                    }
-                }
-            }
+        if (newLocation.equals("same")) {
+            newLocation = item.getLocation();
+        }
+        item = new CalendarItem(newName, LocalTime.parse(newStartTime, format), LocalTime.parse(newEndTime, format),
+                newLocation);
+        if (!newDays.equals("same")) {
+            changeDays(oldName, item, newDays);
+        } else if (newDays.equals("same")) {
+            changeDays(oldName, item, days);
+        } else if (newDays.equals("REMOVE")) {
+            changeDays(oldName, item, "");
         }
         runCalendar();
-    }
-
-    // MODIFIES: this
-    // EFFECTS: helper method that takes an item, removes it from all days it used
-    // to be in, and adds it to all the new days it should be in
-    private void changeDays(CalendarItem item, String days) {
-        for (Day day : daysOfItem(item.getName())) {
-            day.removeItem(item);
-        }
-        applyCourseToEachDay(days, item.getName(), item.getStartTime(), item.getEndTime(), item.getLocation());
     }
 
     // MODIFIES: this
@@ -234,13 +219,45 @@ public class CalendarApp {
     }
 
     // MODIFIES: this
-    // EFFECTS: helper method that creates a new course based on the parameters in
-    // the given days
+    // EFFECTS: helper method that takes an item, removes it from all days it used
+    // to be in, and adds it to all the new days it should be in, which is given as
+    // a string
+    private void changeDays(String name, CalendarItem item, String days) {
+        for (Day day : daysOfItem(name)) {
+            day.removeItem(day.getItemCalled(name));
+        }
+        applyCourseToEachDay(days, item.getName(), item.getStartTime(), item.getEndTime(), item.getLocation());
+    }
+
+    // MODIFIES: this
+    // EFFECTS: helper method that takes an item, removes it from all days it used
+    // to be in, and adds it to all the new days it should be in, which is given as
+    // a list of days
+    private void changeDays(String name, CalendarItem item, ArrayList<Day> days) {
+        for (Day day : daysOfItem(name)) {
+            day.removeItem(day.getItemCalled(name));
+        }
+        applyCourseToEachDay(days, item.getName(), item.getStartTime(), item.getEndTime(), item.getLocation());
+    }
+
+    // MODIFIES: this
+    // EFFECTS: helper method that creates a new course using a string of given
+    // days, based on the parameters
     private void applyCourseToEachDay(String days, String name, LocalTime start, LocalTime end, String location) {
         String[] eachDay = days.split(",");
         for (String string : eachDay) {
             Calendar.daysOfWeek.get(Integer.valueOf(string.trim()) - 1)
                     .addItem(new CalendarItem(name, start, end, location));
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: helper method that creates a new course using a list of given days,
+    // based on the parameters
+    private void applyCourseToEachDay(ArrayList<Day> days, String name, LocalTime start, LocalTime end,
+            String location) {
+        for (Day day : days) {
+            day.addItem(new CalendarItem(name, start, end, location));
         }
     }
 
