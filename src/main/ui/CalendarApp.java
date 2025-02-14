@@ -15,7 +15,6 @@ public class CalendarApp {
     Scanner userInput;
     Calendar calendar;
     Day currentDay;
-    String pause;
     DateTimeFormatter format;
 
     // EFFECTS: gets CSV file from user
@@ -74,29 +73,30 @@ public class CalendarApp {
     // MODIFIES: this
     // EFFECTS: displays available commands and gets next input from user
     private void runCalendar() {
-        displayCalendar();
-        System.out.println("Enter a number between 1-5 for each day of the week (1 -> Monday, 7 -> Friday).");
-        System.out.println("Enter \"n\" to add a new item.");
-        System.out.println("Enter the name of an item to edit it.");
-        System.out.println("Enter \"c\" to change the name of the calendar.");
-        System.out.println(
-                "Enter a day of week in numerical form and a time, separated by commas (ex. \"1, 12:00\"), to find what item is at that time.");
-        System.out.println("Enter \"q\" to quit.");
-        String nextCommand = userInput.nextLine();
-        try {
-            processCommand(nextCommand);
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid numerical days of week!");
-        } catch (IndexOutOfBoundsException e) {
+        while (true) {
+            displayCalendar();
+            System.out.println("Enter a number between 1-5 for each day of the week (1 -> Monday, 5 -> Friday).");
+            System.out.println("Enter \"n\" to add a new item.");
+            System.out.println("Enter the name of an item to edit it.");
+            System.out.println("Enter \"c\" to change the name of the calendar.");
             System.out.println(
-                    "Number too big! Days of week are between 1-5, with 1 being Monday.");
-            System.out.println("Enter anything to continue.");
-            pause = userInput.next();
-        } catch (DateTimeParseException e) {
-            System.out.println("Invalid time!");
-            System.out.println("Enter anything to continue.");
-            pause = userInput.next();
+                    "Enter a day of week in numerical form and a time, separated by commas (ex. \"1, 12:00\"), to find what item is at that time.");
+            System.out.println("Enter \"q\" to quit.");
+            String nextCommand = userInput.nextLine();
+            try {
+                processCommand(nextCommand);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid days of week! They must be numerical, from 1-5, separated by commas.");
+                waitForUser();
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid time. Times must be in \"HH:mm\" format.");
+                waitForUser();
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println("Invalid command!");
+                waitForUser();
+            }
         }
+
     }
 
     // MODIFIES: this
@@ -116,11 +116,13 @@ public class CalendarApp {
             } else if (daysOfItem(command).size() != 0) {
                 editItem(command);
             } else {
-                System.out.println("Invalid command! Enter anything to continue.");
-                pause = userInput.next();
+                String[] weekAndTime = command.split(",");
+                getItemAt(weekAndTime[0], weekAndTime[1]);
             }
         }
-        runCalendar();
+    }
+
+    private void getItemAt(String week, String time) {
     }
 
     // MODIFIES: this
@@ -131,15 +133,19 @@ public class CalendarApp {
         CalendarItem item = days.get(0).getItems().get(index);
         String oldName = item.getName();
         System.out
-                .println("For any information that should not be changed, type \"same\" without the quotation marks.");
+                .println("For any information that should not be changed, type \"same\".");
         System.out.println("If you would like to remove this item, enter \"REMOVE\" into the next line:");
         System.out.print("Enter the new days of the week numerically, separated by commas (ex: \"1, 3, 5\"): ");
         String newDays = userInput.nextLine();
+        if (newDays.equals("REMOVE")) {
+            changeDays(oldName, item, new ArrayList<>());
+            return;
+        }
         System.out.print("Enter new name: ");
         String newName = userInput.nextLine();
         if (daysOfItem(newName).size() != 0) {
             System.out.print("Name already taken! Enter anything to continue.");
-            pause = userInput.next();
+            waitForUser();
             return;
         }
         if (newName.equals("same")) {
@@ -166,10 +172,7 @@ public class CalendarApp {
             changeDays(oldName, item, newDays);
         } else if (newDays.equals("same")) {
             changeDays(oldName, item, days);
-        } else if (newDays.equals("REMOVE")) {
-            changeDays(oldName, item, "");
         }
-        runCalendar();
     }
 
     // MODIFIES: this
@@ -181,7 +184,7 @@ public class CalendarApp {
         String itemName = userInput.nextLine();
         if (daysOfItem(itemName).size() != 0) {
             System.out.println("Name already taken! Enter anything to continue.");
-            pause = userInput.next();
+            waitForUser();
             return;
         }
         System.out.print("Enter the starting time (in HH:mm form): ");
@@ -207,6 +210,7 @@ public class CalendarApp {
         clearConsole();
         System.out.println(calendar.getName() + " Calendar");
         System.out.println();
+        System.out.println("Current time: " + LocalTime.now().format(format));
         System.out.println("                   " +
                 currentDay.getDay().toString().substring(0, 1)
                 + currentDay.getDay().toString().toLowerCase().substring(1) + "\'s Schedule:");
@@ -272,6 +276,12 @@ public class CalendarApp {
             }
         }
         return daysItemIsIn;
+    }
+
+    // EFFECTS: waits for user acknowledgment after an error
+    private void waitForUser() {
+        System.out.println("Press enter to continue: ");
+        userInput.nextLine();
     }
 
     // EFFECTS: clears the console
