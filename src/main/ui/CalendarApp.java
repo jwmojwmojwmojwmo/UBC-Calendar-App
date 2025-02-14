@@ -41,22 +41,22 @@ public class CalendarApp {
     private void getCSV() {
         boolean validInput = false;
         do {
-            System.out.print(
+            System.out.println(
                     "Please enter the CSV's file path. If you need help, enter \"HELP\". If you do not want to upload a CSV, enter \"NEW\":");
             String input = userInput.nextLine();
             if (input.equals("HELP")) {
                 System.out.println(
-                        "To download the CSV file of your courses, log in to Workday. Go to Academics -> Registration and Courses.");
+                        "1. To download the CSV file of your courses, log in to Workday. Go to Academics -> Registration and Courses.");
                 System.out.println(
-                        "Scroll down to the bottom, where there should be a box with the label \"Current Classes\". On the right, there is a gear icon.");
-                System.out.println("Press the gear icon, then press \"Download to Excel\". Download the file.");
+                        "2. Scroll down to the bottom, where there should be a box with the label \"Current Classes\". On the right, there is a gear icon.");
+                System.out.println("3. Press the gear icon, then press \"Download to Excel\". Download the file.");
                 System.out.println(
-                        "Open the file in a spreadsheets application, such as Excel or Google Sheets. Navigate to \"Save As\" or \"Download\", and save the file as an CSV file.");
+                        "4. Open the file in a spreadsheets application, such as Excel or Google Sheets. Navigate to \"Save As\" or \"Download\", and save the file as an CSV file.");
                 System.out.println(
                         "Alternatively, you can Google \"XLSX to CSV\" to find an online converter that can convert the file into a CSV file.");
-                System.out.println("Once the file is downloaded, find it and right click -> Copy as Path.");
-                System.out.println("The copied string will have quotation marks on each side, you must remove these.");
-                System.out.println("Once this is complete, you can paste the file path into this program!");
+                System.out.println("5. Once the file is downloaded, find it and right click -> Copy as Path.");
+                System.out.println("6. The copied string will have quotation marks on each side, you must remove these.");
+                System.out.println("7. Once this is complete, you can paste the file path into this program!");
             } else if (input.equals("NEW")) {
                 validInput = true;
             } else {
@@ -85,14 +85,11 @@ public class CalendarApp {
             String nextCommand = userInput.nextLine();
             try {
                 processCommand(nextCommand);
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid days of week! They must be numerical, from 1-5, separated by commas.");
-                waitForUser();
+            } catch (NumberFormatException | IndexOutOfBoundsException e) {
+                System.out.println("Invalid inputs. Please double check your inputs.");
+                waitForUser();  
             } catch (DateTimeParseException e) {
                 System.out.println("Invalid time. Times must be in \"HH:mm\" format.");
-                waitForUser();
-            } catch (ArrayIndexOutOfBoundsException e) {
-                System.out.println("Invalid command!");
                 waitForUser();
             }
         }
@@ -116,13 +113,15 @@ public class CalendarApp {
             } else if (daysOfItem(command).size() != 0) {
                 editItem(command);
             } else {
-                String[] weekAndTime = command.split(",");
-                getItemAt(weekAndTime[0], weekAndTime[1]);
+                String[] dayAndTime = command.split(",");
+                getItemAt(dayAndTime[0].trim(), dayAndTime[1].trim());
             }
         }
     }
 
-    private void getItemAt(String week, String time) {
+    private void getItemAt(String day, String time) {
+        System.out.println(Calendar.daysOfWeek.get(Integer.valueOf(day)).getItemAt(LocalTime.parse(time, format))); 
+        waitForUser();
     }
 
     // MODIFIES: this
