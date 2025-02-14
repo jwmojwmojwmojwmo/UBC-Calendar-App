@@ -4,6 +4,7 @@ package model;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.time.DayOfWeek;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 
@@ -12,14 +13,16 @@ public class Calendar {
 
     private String name;
 
-    static Day Monday = new Day(DayOfWeek.MONDAY);
-    static Day Tuesday = new Day(DayOfWeek.TUESDAY);
-    static Day Wednesday = new Day(DayOfWeek.WEDNESDAY);
-    static Day Thursday = new Day(DayOfWeek.THURSDAY);
-    static Day Friday = new Day(DayOfWeek.FRIDAY);
+    public static ArrayList<Day> daysOfWeek;
 
     public Calendar(String name) {
         this.name = name;
+        daysOfWeek = new ArrayList<Day>();
+        daysOfWeek.add(new Day(DayOfWeek.MONDAY));
+        daysOfWeek.add(new Day(DayOfWeek.TUESDAY));
+        daysOfWeek.add(new Day(DayOfWeek.WEDNESDAY));
+        daysOfWeek.add(new Day(DayOfWeek.THURSDAY));
+        daysOfWeek.add(new Day(DayOfWeek.FRIDAY));
     }
 
     //MOFDIFIES: this

@@ -3,6 +3,7 @@ package model;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 
 //Represents a day of the week with a list of items
@@ -21,6 +22,7 @@ public class Day {
     // EFFECTS: adds item to this day
     public void addItem(CalendarItem item) {
         items.add(item);
+        items.sort(Comparator.comparing(CalendarItem::getStartTime));
     }
 
     // MODIFIES: this

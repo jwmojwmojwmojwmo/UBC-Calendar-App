@@ -10,7 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class TestCSVReader {
-    String testCourseName = "CPSC210";
+    String testCourseName = "CPSC210-202 - Software Construction";
     String testCourseInfo1 = "\"2025-01-06 - 2025-02-14 | Mon Wed Fri | 11:00 a.m. - 12:00 p.m. | LIFE-Floor 2-Room 2201";
     String testCourseInfo2 = "\"2025-01-06 - 2025-02-14 | Tue Thu | 11:00 a.m. - 12:00 p.m. | LIFE-Floor 2-Room 2201";
     Course testCourse;
@@ -19,12 +19,12 @@ public class TestCSVReader {
     @BeforeEach
     void runBefore() {
         testCSVReader = new ReadCSV(testCourseName, testCourseInfo1);
-        testCourse = new Course("CPSC210", LocalTime.of(11, 0), LocalTime.of(12, 0), "LIFE");
+        testCourse = new Course("CPSC210-202", LocalTime.of(11, 0), LocalTime.of(12, 0), "LIFE");
     }
 
     @Test
     void testConstructor() {
-        assertEquals(testCourseName, testCSVReader.getCourseName());
+        assertEquals("CPSC210-202", testCSVReader.getCourseName());
         assertEquals(testCourseInfo1, testCSVReader.getCourseInfo());
     }
 
@@ -50,24 +50,24 @@ public class TestCSVReader {
 
     @Test
     void pass() {
-        Calendar.Monday.removeAll();
-        Calendar.Wednesday.removeAll();
-        Calendar.Friday.removeAll();
-        assertEquals(new ArrayList<CalendarItem>(), Calendar.Monday.getItems());
-        assertEquals(new ArrayList<CalendarItem>(), Calendar.Wednesday.getItems());
-        assertEquals(new ArrayList<CalendarItem>(), Calendar.Friday.getItems());
+        Calendar.daysOfWeek.get(0).removeAll();
+        Calendar.daysOfWeek.get(2).removeAll();
+        Calendar.daysOfWeek.get(4).removeAll();
+        assertEquals(new ArrayList<CalendarItem>(), Calendar.daysOfWeek.get(0).getItems());
+        assertEquals(new ArrayList<CalendarItem>(), Calendar.daysOfWeek.get(2).getItems());
+        assertEquals(new ArrayList<CalendarItem>(), Calendar.daysOfWeek.get(4).getItems());
         testCSVReader.convert();
-        assertEquals("CPSC210", Calendar.Monday.getItems().get(0).getName());
-        assertEquals(LocalTime.of(11,0), Calendar.Monday.getItems().get(0).getStartTime());
-        assertEquals(LocalTime.of(12,0), Calendar.Monday.getItems().get(0).getEndTime());
-        assertEquals("LIFE", Calendar.Monday.getItems().get(0).getLocation());
-        assertEquals("CPSC210", Calendar.Wednesday.getItems().get(0).getName());
-        assertEquals(LocalTime.of(11,0), Calendar.Wednesday.getItems().get(0).getStartTime());
-        assertEquals(LocalTime.of(12,0), Calendar.Wednesday.getItems().get(0).getEndTime());
-        assertEquals("LIFE", Calendar.Wednesday.getItems().get(0).getLocation());
-        assertEquals("CPSC210", Calendar.Friday.getItems().get(0).getName());
-        assertEquals(LocalTime.of(11,0), Calendar.Friday.getItems().get(0).getStartTime());
-        assertEquals(LocalTime.of(12,0), Calendar.Friday.getItems().get(0).getEndTime());
-        assertEquals("LIFE", Calendar.Friday.getItems().get(0).getLocation());
+        assertEquals("CPSC210-202", Calendar.daysOfWeek.get(0).getItems().get(0).getName());
+        assertEquals(LocalTime.of(11,0), Calendar.daysOfWeek.get(0).getItems().get(0).getStartTime());
+        assertEquals(LocalTime.of(12,0), Calendar.daysOfWeek.get(0).getItems().get(0).getEndTime());
+        assertEquals("LIFE", Calendar.daysOfWeek.get(0).getItems().get(0).getLocation());
+        assertEquals("CPSC210-202", Calendar.daysOfWeek.get(2).getItems().get(0).getName());
+        assertEquals(LocalTime.of(11,0), Calendar.daysOfWeek.get(2).getItems().get(0).getStartTime());
+        assertEquals(LocalTime.of(12,0), Calendar.daysOfWeek.get(2).getItems().get(0).getEndTime());
+        assertEquals("LIFE", Calendar.daysOfWeek.get(2).getItems().get(0).getLocation());
+        assertEquals("CPSC210-202", Calendar.daysOfWeek.get(4).getItems().get(0).getName());
+        assertEquals(LocalTime.of(11,0), Calendar.daysOfWeek.get(4).getItems().get(0).getStartTime());
+        assertEquals(LocalTime.of(12,0), Calendar.daysOfWeek.get(4).getItems().get(0).getEndTime());
+        assertEquals("LIFE", Calendar.daysOfWeek.get(4).getItems().get(0).getLocation());
     }
 }

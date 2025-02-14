@@ -11,6 +11,6 @@ This project is of interest to me as I have found that using Workday to find cla
 User Stories:
 - As a user, I want to see exactly what classes I have each day.
 - As a user, I want to see where I have to go each day.
-- As a user, I want to be able to add extracurrculars that I have to do on top of my class schedule, and specify the time and location.
-- As a user, I want to be able to see what I have to do each day.
+- As a user, I want to be able to see a list of what I have to do each day.
+- As a user, I want to be able to add extracurrculars and other classes that I have to do on top of my class schedule, and specify the time and location.
 - As a user, I want to easily find what I have to do at a specific time.

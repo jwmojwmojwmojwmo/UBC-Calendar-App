@@ -24,7 +24,7 @@ public class ReadCSV {
             "Fri", DayOfWeek.FRIDAY);
 
     public ReadCSV(String name, String info) {
-        courseName = name;
+        courseName = name.substring(0, name.indexOf("-", name.indexOf("-") + 1)).trim();
         courseInfo = info;
         courseDays = new ArrayList<DayOfWeek>();
     }
@@ -49,8 +49,6 @@ public class ReadCSV {
                 .trim().replace(".", "").toUpperCase(),
                 DateTimeFormatter.ofPattern("h:mm a"));
 
-        System.out.println(courseInfo.substring(index2 + 1));
-
         courseLocation = courseInfo.substring(index2 + 1).substring(0, courseInfo.indexOf("-")).trim();
 
         pass();
@@ -61,19 +59,19 @@ public class ReadCSV {
         for (DayOfWeek day : courseDays) {
             switch (day.getValue()) {
                 case 1:
-                    Calendar.Monday.addItem(new Course(courseName, courseStart, courseEnd, courseLocation));
+                    Calendar.daysOfWeek.get(0).addItem(new Course(courseName, courseStart, courseEnd, courseLocation));
                     break;
                 case 2:
-                    Calendar.Tuesday.addItem(new Course(courseName, courseStart, courseEnd, courseLocation));
+                    Calendar.daysOfWeek.get(1).addItem(new Course(courseName, courseStart, courseEnd, courseLocation));
                     break;
                 case 3:
-                    Calendar.Wednesday.addItem(new Course(courseName, courseStart, courseEnd, courseLocation));
+                    Calendar.daysOfWeek.get(2).addItem(new Course(courseName, courseStart, courseEnd, courseLocation));
                     break;
                 case 4:
-                    Calendar.Thursday.addItem(new Course(courseName, courseStart, courseEnd, courseLocation));
+                    Calendar.daysOfWeek.get(3).addItem(new Course(courseName, courseStart, courseEnd, courseLocation));
                     break;
                 case 5:
-                    Calendar.Friday.addItem(new Course(courseName, courseStart, courseEnd, courseLocation));
+                    Calendar.daysOfWeek.get(4).addItem(new Course(courseName, courseStart, courseEnd, courseLocation));
                     break;
             }
         }
