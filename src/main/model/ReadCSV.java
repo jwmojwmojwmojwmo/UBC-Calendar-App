@@ -58,23 +58,7 @@ public class ReadCSV {
     // Passes info from convert to make new courses
     public void pass() {
         for (DayOfWeek day : courseDays) {
-            switch (day.getValue()) {
-                case 1:
-                    Calendar.daysOfWeek.get(0).addItem(new Course(courseName, courseStart, courseEnd, courseLocation));
-                    break;
-                case 2:
-                    Calendar.daysOfWeek.get(1).addItem(new Course(courseName, courseStart, courseEnd, courseLocation));
-                    break;
-                case 3:
-                    Calendar.daysOfWeek.get(2).addItem(new Course(courseName, courseStart, courseEnd, courseLocation));
-                    break;
-                case 4:
-                    Calendar.daysOfWeek.get(3).addItem(new Course(courseName, courseStart, courseEnd, courseLocation));
-                    break;
-                case 5:
-                    Calendar.daysOfWeek.get(4).addItem(new Course(courseName, courseStart, courseEnd, courseLocation));
-                    break;
-            }
+            Calendar.daysOfWeek.get(day.getValue() - 1).addItem(new Course(courseName, courseStart, courseEnd, courseLocation));
         }
     }
 
