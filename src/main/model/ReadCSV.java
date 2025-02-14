@@ -49,7 +49,8 @@ public class ReadCSV {
                 .trim().replace(".", "").toUpperCase(),
                 DateTimeFormatter.ofPattern("h:mm a"));
 
-        courseLocation = courseInfo.substring(index2 + 1).substring(0, courseInfo.indexOf("-")).trim();
+        courseLocation = courseInfo.substring(index2 + 1);
+        courseLocation = courseLocation.substring(0, courseLocation.indexOf("-")).trim();
 
         pass();
     }

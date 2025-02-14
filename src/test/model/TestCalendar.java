@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.FileNotFoundException;
-import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
@@ -15,7 +14,6 @@ public class TestCalendar {
     CalendarItem testCourse;
     CalendarItem testCSVCourse;
     ArrayList<CalendarItem> testList = new ArrayList<CalendarItem>();
-    Day Monday = new Day(DayOfWeek.MONDAY);
 
     @BeforeEach
     void runBefore() {
@@ -24,7 +22,12 @@ public class TestCalendar {
         testCourse = new Course("Math", LocalTime.of(13, 0), LocalTime.of(14, 0), "BUCH");
         testCSVCourse = new Course("CPSC_V 210-202 - Software Construction", LocalTime.of(11, 0), LocalTime.of(12, 0),
                 "LIFE");
-        Monday.addItem(testCourse);
+    }
+
+    @Test
+    void testConstructor() {
+        assertEquals("test", testCalendar1.getName());
+        assertEquals("jwmo", testCalendar2.getName());
     }
 
     @Test
@@ -49,12 +52,6 @@ public class TestCalendar {
             }
         } catch (FileNotFoundException e) {
         }
-    }
-
-    @Test
-    void testConstructor() {
-        assertEquals("test", testCalendar1.getName());
-        assertEquals("jwmo", testCalendar2.getName());
     }
 
     @Test

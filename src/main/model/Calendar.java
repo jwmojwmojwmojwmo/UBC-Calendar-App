@@ -45,6 +45,20 @@ public class Calendar {
         csvReader.close();
     }
 
+    
+    //EFFECTS: helper method that returns 
+    public ArrayList<Day> daysOfCourse(String name) {
+        ArrayList<Day> daysCourseIsIn = new ArrayList<Day>();
+        for (Day day : Calendar.daysOfWeek) {
+            for (CalendarItem item : day.getItems()) {
+                if (item.getName().equals(name)) {
+                    daysCourseIsIn.add(day);
+                }
+            }
+        }
+        return daysCourseIsIn;
+    }
+
     // MODIFIES: this
     // EFFECTS: changes Calendar name to given name
     public void changeName(String name) {
