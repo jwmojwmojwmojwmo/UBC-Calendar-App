@@ -19,8 +19,8 @@ public class TestCalendar {
     void runBefore() {
         testCalendar1 = new Calendar("test");
         testCalendar2 = new Calendar("jwmo");
-        testCourse = new Course("Math", LocalTime.of(13, 0), LocalTime.of(14, 0), "BUCH");
-        testCSVCourse = new Course("CPSC_V 210-202 - Software Construction", LocalTime.of(11, 0), LocalTime.of(12, 0),
+        testCourse = new CalendarItem("Math", LocalTime.of(13, 0), LocalTime.of(14, 0), "BUCH");
+        testCSVCourse = new CalendarItem("CPSC_V 210-202 - Software Construction", LocalTime.of(11, 0), LocalTime.of(12, 0),
                 "LIFE");
     }
 
@@ -28,17 +28,19 @@ public class TestCalendar {
     void testConstructor() {
         assertEquals("test", testCalendar1.getName());
         assertEquals("jwmo", testCalendar2.getName());
+        assertEquals(5, testCalendar1.getDaysOfWeek().size());
+
     }
 
     @Test
     void testAddCourses() {
         try {
-            assertEquals(new ArrayList<CalendarItem>(), Calendar.daysOfWeek.get(0).getItems());
+            assertEquals(new ArrayList<CalendarItem>(), testCalendar1.getDaysOfWeek().get(0).getItems());
             testCalendar1.addCourses("src\\test\\model\\TestCSVFile.csv");
-            assertEquals("CPSC_V 210-202", Calendar.daysOfWeek.get(0).getItems().get(0).getName());
-            assertEquals(LocalTime.of(11, 0), Calendar.daysOfWeek.get(0).getItems().get(0).getStartTime());
-            assertEquals(LocalTime.of(12, 0), Calendar.daysOfWeek.get(0).getItems().get(0).getEndTime());
-            assertEquals("LIFE", Calendar.daysOfWeek.get(0).getItems().get(0).getLocation());
+            assertEquals("CPSC_V 210-202", testCalendar1.getDaysOfWeek().get(0).getItems().get(0).getName());
+            assertEquals(LocalTime.of(11, 0), testCalendar1.getDaysOfWeek().get(0).getItems().get(0).getStartTime());
+            assertEquals(LocalTime.of(12, 0), testCalendar1.getDaysOfWeek().get(0).getItems().get(0).getEndTime());
+            assertEquals("LIFE", testCalendar1.getDaysOfWeek().get(0).getItems().get(0).getLocation());
         } catch (FileNotFoundException e) {
         }
     }
@@ -47,7 +49,7 @@ public class TestCalendar {
     void testBrokenAddCourses() {
         try {
             testCalendar2.addCourses("src\\test\\model\\TestBrokenCSVFile.csv");
-            for (Day day : Calendar.daysOfWeek) {
+            for (Day day : testCalendar1.getDaysOfWeek()) {
                 assertEquals(0, day.getItems().size());
             }
         } catch (FileNotFoundException e) {

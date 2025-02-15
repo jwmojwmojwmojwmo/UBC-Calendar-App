@@ -12,8 +12,8 @@ public class TestDay {
     Day monday;
     LocalTime courseStartTime = LocalTime.of(10, 30);
     LocalTime courseEndTime = LocalTime.of(12,30);
-    CalendarItem testCourse = new Course("Math", courseStartTime, courseEndTime, "IRC");
-    CalendarItem testCourse2 = new Course("Science", LocalTime.of(12,30), LocalTime.of(13,30), "IRC");
+    CalendarItem testCourse = new CalendarItem("Math", courseStartTime, courseEndTime, "IRC");
+    CalendarItem testCourse2 = new CalendarItem("Science", LocalTime.of(12,30), LocalTime.of(13,30), "IRC");
     ArrayList<CalendarItem> testList = new ArrayList<CalendarItem>();
 
     @BeforeEach

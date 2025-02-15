@@ -15,6 +15,7 @@ public class ReadCSV {
     LocalTime courseStart;
     LocalTime courseEnd;
     String courseLocation;
+    ArrayList<Day> daysOfWeek;
 
     final Map<String, DayOfWeek> dayMap = Map.of(
             "Mon", DayOfWeek.MONDAY,
@@ -23,16 +24,17 @@ public class ReadCSV {
             "Thu", DayOfWeek.THURSDAY,
             "Fri", DayOfWeek.FRIDAY);
 
-    public ReadCSV(String name, String info) {
+    public ReadCSV(String name, String info, ArrayList<Day> daysOfWeek) {
         courseName = name.substring(0, name.indexOf("-", name.indexOf("-") + 1)).trim();
         courseInfo = info;
         courseDays = new ArrayList<DayOfWeek>();
+        this.daysOfWeek = daysOfWeek;
     }
 
     // MODIFIES: this
     // EFFECTS: converts courseInfo into the course's days, start and end times, and
     // location, and passes it to course to create a course
-    public void convert() {
+    public ArrayList<Day> convert() {
         for (Entry<String, DayOfWeek> entry : dayMap.entrySet()) {
             if (courseInfo.contains(entry.getKey())) {
                 courseDays.add(entry.getValue());
@@ -53,12 +55,15 @@ public class ReadCSV {
         courseLocation = courseLocation.substring(0, courseLocation.indexOf("-")).trim();
 
         pass();
+
+        return daysOfWeek;
     }
 
     // Passes info from convert to make new courses
     public void pass() {
         for (DayOfWeek day : courseDays) {
-            Calendar.daysOfWeek.get(day.getValue() - 1).addItem(new Course(courseName, courseStart, courseEnd, courseLocation));
+            daysOfWeek.get(day.getValue() - 1)
+                    .addItem(new CalendarItem(courseName, courseStart, courseEnd, courseLocation));
         }
     }
 

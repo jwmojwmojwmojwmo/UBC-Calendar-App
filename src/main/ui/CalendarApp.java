@@ -33,29 +33,30 @@ public class CalendarApp {
         System.out.print("Enter calendar's name:");
         String calendarName = userInput.nextLine();
         calendar = new Calendar(calendarName);
-        currentDay = Calendar.daysOfWeek.get(0);
+        currentDay = calendar.getDaysOfWeek().get(0);
     }
 
     // MODIFIES: this
     // EFFECTS: prompts user to enter CSV file
+    @SuppressWarnings("methodlength")
     private void getCSV() {
         boolean validInput = false;
         do {
-            System.out.println(
-                    "Please enter the CSV's file path. If you need help, enter \"HELP\". If you do not want to upload a CSV, enter \"NEW\":");
+            System.out.print("Please enter the CSV's file path. If you need help, enter \"HELP\".");
+            System.out.println("If you do not want to upload a CSV, enter \"NEW\":");
             String input = userInput.nextLine();
             if (input.equals("HELP")) {
-                System.out.println(
-                        "1. To download the CSV file of your courses, log in to Workday. Go to Academics -> Registration and Courses.");
-                System.out.println(
-                        "2. Scroll down to the bottom, where there should be a box with the label \"Current Classes\". On the right, there is a gear icon.");
+                System.out.print("1. To download the CSV file of your courses, log in to Workday.");
+                System.out.println(" Go to Academics -> Registration and Courses.");
+                System.out.print("2. Scroll down to where there is a box called \"Current Classes\".");
+                System.out.println("On the right, there is a gear icon.");
                 System.out.println("3. Press the gear icon, then press \"Download to Excel\". Download the file.");
-                System.out.println(
-                        "4. Open the file in a spreadsheets application, such as Excel or Google Sheets. Navigate to \"Save As\" or \"Download\", and save the file as an CSV file.");
-                System.out.println(
-                        "Alternatively, you can Google \"XLSX to CSV\" to find an online converter that can convert the file into a CSV file.");
+                System.out.print("4. Open the file in a spreadsheets application, such as Excel or Google Sheets. ");
+                System.out.println("Find \"Save As\" or \"Download\", and save the file as a CSV file.");
+                System.out.print("Alternatively, you can Google \"XLSX to CSV\" to find an online converter ");
+                System.out.println("that can convert the file into a CSV file.");
                 System.out.println("5. Once the file is downloaded, find it and right click -> Copy as Path.");
-                System.out.println("6. The copied string will have quotation marks on each side, you must remove these.");
+                System.out.println("6. The copied path will have quotation marks on each side, which must be deleted.");
                 System.out.println("7. Once this is complete, you can paste the file path into this program!");
             } else if (input.equals("NEW")) {
                 validInput = true;
@@ -80,14 +81,15 @@ public class CalendarApp {
             System.out.println("Enter the name of an item to edit it.");
             System.out.println("Enter \"c\" to change the name of the calendar.");
             System.out.println(
-                    "Enter a day of week in numerical form and a time, separated by commas (ex. \"1, 12:00\"), to find what item is at that time.");
+                    "Enter a day of week in numerical form and a time, separated by commas (ex. \"1, 12:00\"),");
+            System.out.println("to find what item is at that time.");
             System.out.println("Enter \"q\" to quit.");
             String nextCommand = userInput.nextLine();
             try {
                 processCommand(nextCommand);
             } catch (NumberFormatException | IndexOutOfBoundsException e) {
                 System.out.println("Invalid inputs. Please double check your inputs.");
-                waitForUser();  
+                waitForUser();
             } catch (DateTimeParseException e) {
                 System.out.println("Invalid time. Times must be in \"HH:mm\" format.");
                 waitForUser();
@@ -101,7 +103,7 @@ public class CalendarApp {
     private void processCommand(String command) {
         try {
             if (Integer.valueOf(command) >= 1 && Integer.valueOf(command) <= 5) {
-                currentDay = Calendar.daysOfWeek.get(Integer.valueOf(command) - 1);
+                currentDay = calendar.getDaysOfWeek().get(Integer.valueOf(command) - 1);
             }
         } catch (NumberFormatException e) {
             if (command.equals("q")) {
@@ -120,7 +122,8 @@ public class CalendarApp {
     }
 
     private void getItemAt(String day, String time) {
-        System.out.println(Calendar.daysOfWeek.get(Integer.valueOf(day) - 1).getItemAt(LocalTime.parse(time, format))); 
+        System.out.println(calendar.getDaysOfWeek().get(Integer.valueOf(day) - 1)
+                .getItemAt(LocalTime.parse(time, format)));
         waitForUser();
     }
 
@@ -220,8 +223,8 @@ public class CalendarApp {
         System.out.println(calendar.getName() + " Calendar");
         System.out.println();
         System.out.println("Current time: " + LocalTime.now().format(format));
-        System.out.println("                   " +
-                currentDay.getDay().toString().substring(0, 1)
+        System.out.println("                   "
+                + currentDay.getDay().toString().substring(0, 1)
                 + currentDay.getDay().toString().toLowerCase().substring(1) + "\'s Schedule:");
         System.out.println();
         System.out.println("|     Event Name     |     Event Time     |     Event Location     |");
@@ -259,7 +262,7 @@ public class CalendarApp {
     private void applyCourseToEachDay(String days, String name, LocalTime start, LocalTime end, String location) {
         String[] eachDay = days.split(",");
         for (String string : eachDay) {
-            Calendar.daysOfWeek.get(Integer.valueOf(string.trim()) - 1)
+            calendar.getDaysOfWeek().get(Integer.valueOf(string.trim()) - 1)
                     .addItem(new CalendarItem(name, start, end, location));
         }
     }
@@ -277,7 +280,7 @@ public class CalendarApp {
     // EFFECTS: helper method that returns the days that the given item is in
     private ArrayList<Day> daysOfItem(String name) {
         ArrayList<Day> daysItemIsIn = new ArrayList<Day>();
-        for (Day day : Calendar.daysOfWeek) {
+        for (Day day : calendar.getDaysOfWeek()) {
             for (CalendarItem item : day.getItems()) {
                 if (item.getName().equals(name)) {
                     daysItemIsIn.add(day);

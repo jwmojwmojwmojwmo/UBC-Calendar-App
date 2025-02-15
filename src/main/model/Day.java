@@ -5,7 +5,6 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-
 //Represents a day of the week with a list of items
 public class Day {
 
@@ -16,7 +15,6 @@ public class Day {
         this.day = day;
         items = new ArrayList<CalendarItem>();
     }
-
 
     // MODIFIES: this
     // EFFECTS: adds item to this day
@@ -39,18 +37,20 @@ public class Day {
         items.remove(index);
     }
 
-    //EFFECTS: returns the item at the given day and time, or returns "Nothing found!"
+    // EFFECTS: returns the item at the given day and time, or returns "Nothing
+    // found!"
     public String getItemAt(LocalTime time) {
         for (CalendarItem item : items) {
-            if (time.equals(item.getStartTime()) || time.equals(item.getEndTime()) || 
-            (time.isAfter(item.getStartTime()) && time.isBefore(item.getEndTime()))) {
+            if (time.equals(item.getStartTime()) || time.equals(item.getEndTime())
+                    || (time.isAfter(item.getStartTime()) && time.isBefore(item.getEndTime()))) {
                 return item.getName();
             }
         }
         return "Nothing found!";
     }
 
-    //EFFECTS: returns the index of the item with the given name in the given day, or returns -1
+    // EFFECTS: returns the index of the item with the given name in the given day,
+    // or returns -1
     public Integer getItemCalled(String name) {
         for (int i = 0; i < getItems().size(); i++) {
             if (getItems().get(i).getName().equals(name)) {
@@ -60,8 +60,8 @@ public class Day {
         return -1;
     }
 
-    //MODIFIES: this
-    //EFFECTS: removes all items in this day
+    // MODIFIES: this
+    // EFFECTS: removes all items in this day
     public void removeAll() {
         items = new ArrayList<CalendarItem>();
     }

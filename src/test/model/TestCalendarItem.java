@@ -17,8 +17,8 @@ public class TestCalendarItem {
 
     @BeforeEach
     void runBefore() {
-        testCourse = new Course("Math", courseStartTime, courseEndTime, "IRC");
-        testExtra = new Extracurricular("Minecraft Club", extraStartTime, extraEndTime, "Minecraft Club House");
+        testCourse = new CalendarItem("Math", courseStartTime, courseEndTime, "IRC");
+        testExtra = new CalendarItem("Minecraft Club", extraStartTime, extraEndTime, "Minecraft Club House");
     }
 
     @Test
