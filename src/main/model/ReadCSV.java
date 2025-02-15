@@ -31,7 +31,7 @@ public class ReadCSV {
         this.daysOfWeek = daysOfWeek;
     }
 
-    // MODIFIES: this
+    // MODIFIES: this, Calendar, Day, CalendarItem
     // EFFECTS: converts courseInfo into the course's days, start and end times, and
     // location, and passes it to course to create a course
     public ArrayList<Day> convert() {
@@ -59,7 +59,8 @@ public class ReadCSV {
         return daysOfWeek;
     }
 
-    // Passes info from convert to make new courses
+    // MODIFIES: this, Calendar, Day, CalendarItem
+    // EFFECTS: Passes info from convert to make new courses
     public void pass() {
         for (DayOfWeek day : courseDays) {
             daysOfWeek.get(day.getValue() - 1)

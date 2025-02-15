@@ -11,13 +11,16 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import exceptions.InvalidTime;
+import exceptions.ItemAlreadyExists;
+
 public class CalendarApp {
     Scanner userInput;
     Calendar calendar;
     Day currentDay;
     DateTimeFormatter format;
 
-    // EFFECTS: gets CSV file from user
+    // EFFECTS: gets CSV file from user and runs the Calendar
     public CalendarApp() {
         userInput = new Scanner(System.in);
         format = DateTimeFormatter.ofPattern("HH:mm");
@@ -27,7 +30,7 @@ public class CalendarApp {
         runCalendar();
     }
 
-    // MODIFIES: this
+    // MODIFIES: this, Calendar
     // EFFECTS: makes new calendar with given name
     private void makeNewCalendar() {
         System.out.print("Enter calendar's name:");
@@ -36,9 +39,10 @@ public class CalendarApp {
         currentDay = calendar.getDaysOfWeek().get(0);
     }
 
-    // MODIFIES: this
+    // MODIFIES: this, Day, Calendar, CalendarItem
     // EFFECTS: prompts user to enter CSV file
     @SuppressWarnings("methodlength")
+    // This method is long because of the explanation required for the user. There is not much actual code.
     private void getCSV() {
         boolean validInput = false;
         do {
@@ -71,7 +75,7 @@ public class CalendarApp {
         } while (!validInput);
     }
 
-    // MODIFIES: this
+    // MODIFIES: this, Day, CalendarItem, Calendar
     // EFFECTS: displays available commands and gets next input from user
     private void runCalendar() {
         while (true) {
@@ -93,14 +97,20 @@ public class CalendarApp {
             } catch (DateTimeParseException e) {
                 System.out.println("Invalid time. Times must be in \"HH:mm\" format.");
                 waitForUser();
+            } catch (ItemAlreadyExists e) {
+                System.out.println("This name is already taken!");
+                waitForUser();
+            } catch (InvalidTime e) {
+                System.out.println("End time must be after start time.");
+                waitForUser();
             }
         }
 
     }
 
-    // MODIFIES: this
+    // MODIFIES: this, Day, Calendar, CalendarItem
     // EFFECTS: processes input from user
-    private void processCommand(String command) {
+    private void processCommand(String command) throws ItemAlreadyExists, InvalidTime {
         try {
             if (Integer.valueOf(command) >= 1 && Integer.valueOf(command) <= 5) {
                 currentDay = calendar.getDaysOfWeek().get(Integer.valueOf(command) - 1);
@@ -127,15 +137,16 @@ public class CalendarApp {
         waitForUser();
     }
 
-    // MODIFIES: this
+    // MODIFIES: this, Day, CalendarItem, Calendar
     // EFFECTS: edits the given item based on the user's input
-    private void editItem(String name) {
+    @SuppressWarnings("methodlength") 
+    // Method is only 2 lines too long and all lines are necessary. 2 lines can be removed by sacrificing
+    // the user's understanding, however I do not believe this is good programming design.
+    private void editItem(String name) throws ItemAlreadyExists, InvalidTime {
         ArrayList<Day> days = daysOfItem(name);
-        Integer index = days.get(0).getItemCalled(name);
-        CalendarItem item = days.get(0).getItems().get(index);
+        CalendarItem item = days.get(0).getItems().get(days.get(0).getItemCalled(name));
         String oldName = item.getName();
-        System.out
-                .println("For any information that should not be changed, type \"same\".");
+        System.out.println("For any information that should not be changed, type \"same\".");
         System.out.println("If you would like to remove this item, enter \"REMOVE\" into the next line:");
         System.out.print("Enter the new days of the week numerically, separated by commas (ex: \"1, 3, 5\"): ");
         String newDays = userInput.nextLine();
@@ -145,63 +156,61 @@ public class CalendarApp {
         }
         System.out.print("Enter new name: ");
         String newName = userInput.nextLine();
-        if (daysOfItem(newName).size() != 0) {
-            System.out.print("Name already taken! Enter anything to continue.");
-            waitForUser();
-            return;
-        }
-        if (newName.equals("same")) {
-            newName = item.getName();
-        }
         System.out.print("Enter the new start time: ");
         String newStartTime = userInput.nextLine();
-        if (newStartTime.equals("same")) {
-            newStartTime = item.getStartTime().toString();
-        }
         System.out.print("Enter the new end time: ");
         String newEndTime = userInput.nextLine();
-        if (newEndTime.equals("same")) {
-            newEndTime = item.getEndTime().toString();
-        }
-        if (LocalTime.parse(newEndTime, format).isBefore(LocalTime.parse(newStartTime, format))) {
-            System.out.println("End time must be after start time.");
-            waitForUser();
-            return;
-        }
         System.out.print("Enter the new location: ");
         String newLocation = userInput.nextLine();
-        if (newLocation.equals("same")) {
-            newLocation = item.getLocation();
-        }
-        item = new CalendarItem(newName, LocalTime.parse(newStartTime, format), LocalTime.parse(newEndTime, format),
-                newLocation);
-        if (!newDays.equals("same")) {
-            changeDays(oldName, item, newDays);
-        } else if (newDays.equals("same")) {
+        item = editItemInfo(newDays, newName, newStartTime, newEndTime, newLocation, item);
+        if (newDays.equals("same")) {
             changeDays(oldName, item, days);
+        } else {
+            changeDays(oldName, item, newDays);
         }
     }
 
-    // MODIFIES: this
+    // MODIFIES: this, Calendar, CalendarItem, Day
+    // EFFECTS: edits the item into the new information
+    private CalendarItem editItemInfo(String days, String name, String start, String end, String location,
+            CalendarItem item) throws ItemAlreadyExists, InvalidTime {
+        if (daysOfItem(name).size() != 0) {
+            throw new ItemAlreadyExists();
+        }
+        if (name.equals("same")) {
+            name = item.getName();
+        }
+        if (start.equals("same")) {
+            start = item.getStartTime().toString();
+        }
+        if (end.equals("same")) {
+            end = item.getEndTime().toString();
+        }
+        if (LocalTime.parse(end, format).isBefore(LocalTime.parse(start, format))) {
+            throw new InvalidTime();
+        }
+        if (location.equals("same")) {
+            location = item.getLocation();
+        }
+        return new CalendarItem(name, LocalTime.parse(start, format), LocalTime.parse(end, format), location);
+    }
+
+    // MODIFIES: this, CalendarItem, Calendar, Day
     // EFFECTS: adds a new item to the calendar based on the user's input
-    private void addNewItem() {
+    private void addNewItem() throws InvalidTime, ItemAlreadyExists {
         System.out.print("Enter the numeric days of the week of the item, separated by commas (ex: \"1, 3, 5\"): ");
         String days = userInput.nextLine();
         System.out.print("Enter the name of the item: ");
         String itemName = userInput.nextLine();
         if (daysOfItem(itemName).size() != 0) {
-            System.out.println("Name already taken! Enter anything to continue.");
-            waitForUser();
-            return;
+            throw new ItemAlreadyExists();
         }
         System.out.print("Enter the starting time (in HH:mm form): ");
         String itemStartTime = userInput.nextLine();
         System.out.print("Enter the ending time (in HH:mm form): ");
         String itemEndTime = userInput.nextLine();
         if (LocalTime.parse(itemEndTime, format).isBefore(LocalTime.parse(itemStartTime, format))) {
-            System.out.println("End time must be after start time.");
-            waitForUser();
-            return;
+            throw new InvalidTime();
         }
         System.out.print("Enter the name of the location: ");
         String location = userInput.nextLine();
@@ -209,7 +218,7 @@ public class CalendarApp {
                 LocalTime.parse(itemEndTime, format), location);
     }
 
-    // MODIFIES: this
+    // MODIFIES: this, Calendar
     // EFFECTS: changes the calendar's name to user's input
     private void changeCalendarName() {
         System.out.print("Enter new name: ");
@@ -234,10 +243,10 @@ public class CalendarApp {
         }
     }
 
-    // MODIFIES: this
+    // MODIFIES: this, Day, CalendarItem
     // EFFECTS: helper method that takes an item, removes it from all days it used
     // to be in, and adds it to all the new days it should be in, which is given as
-    // a string
+    // a string. Used when the user inputs new days to add the item to.
     private void changeDays(String name, CalendarItem item, String days) {
         for (Day day : daysOfItem(name)) {
             day.removeItem(day.getItemCalled(name));
@@ -245,10 +254,11 @@ public class CalendarApp {
         applyCourseToEachDay(days, item.getName(), item.getStartTime(), item.getEndTime(), item.getLocation());
     }
 
-    // MODIFIES: this
+    // MODIFIES: this, Day, CalendarItem
     // EFFECTS: helper method that takes an item, removes it from all days it used
-    // to be in, and adds it to all the new days it should be in, which is given as
-    // a list of days
+    // to be in, and adds the item back into the same days, with new information.
+    // Used when the user chooses to keep the days the same when editing
+    // information.
     private void changeDays(String name, CalendarItem item, ArrayList<Day> days) {
         for (Day day : daysOfItem(name)) {
             day.removeItem(day.getItemCalled(name));
@@ -256,7 +266,7 @@ public class CalendarApp {
         applyCourseToEachDay(days, item.getName(), item.getStartTime(), item.getEndTime(), item.getLocation());
     }
 
-    // MODIFIES: this
+    // MODIFIES: this, Day, CalendarItem, Calendar
     // EFFECTS: helper method that creates a new course using a string of given
     // days, based on the parameters
     private void applyCourseToEachDay(String days, String name, LocalTime start, LocalTime end, String location) {

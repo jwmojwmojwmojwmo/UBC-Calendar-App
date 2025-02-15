@@ -22,7 +22,7 @@ public class Calendar {
         daysOfWeek.add(new Day(DayOfWeek.FRIDAY));
     }
 
-    // MOFDIFIES: this
+    // MOFDIFIES: this, Day
     // REQUIRES: The file path must lead to a CSV of registered courses as created
     // by Workday
     // EFFECTS: Convert CSV file into a list of courses and adds courses to Calendar
