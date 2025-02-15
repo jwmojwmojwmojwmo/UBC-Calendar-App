@@ -42,7 +42,8 @@ public class CalendarApp {
     // MODIFIES: this, Day, Calendar, CalendarItem
     // EFFECTS: prompts user to enter CSV file
     @SuppressWarnings("methodlength")
-    // This method is long because of the explanation required for the user. There is not much actual code.
+    // This method is long because of the explanation required for the user. There
+    // is not much actual code.
     private void getCSV() {
         boolean validInput = false;
         do {
@@ -92,20 +93,15 @@ public class CalendarApp {
             try {
                 processCommand(nextCommand);
             } catch (NumberFormatException | IndexOutOfBoundsException e) {
-                System.out.println("Invalid inputs. Please double check your inputs.");
-                waitForUser();
+                printError("Invalid inputs. Please double-check your inputs.");
             } catch (DateTimeParseException e) {
-                System.out.println("Invalid time. Times must be in \"HH:mm\" format.");
-                waitForUser();
+                printError("Invalid time. Times must be in \"HH:mm\" format.");
             } catch (ItemAlreadyExists e) {
-                System.out.println("This name is already taken!");
-                waitForUser();
+                printError("This name is already taken!");
             } catch (InvalidTime e) {
-                System.out.println("End time must be after start time.");
-                waitForUser();
+                printError("End time must be after start time.");
             }
         }
-
     }
 
     // MODIFIES: this, Day, Calendar, CalendarItem
@@ -139,9 +135,11 @@ public class CalendarApp {
 
     // MODIFIES: this, Day, CalendarItem, Calendar
     // EFFECTS: edits the given item based on the user's input
-    @SuppressWarnings("methodlength") 
-    // Method is only 2 lines too long and all lines are necessary. 2 lines can be removed by sacrificing
-    // the user's understanding, however I do not believe this is good programming design.
+    @SuppressWarnings("methodlength")
+    // Method is only 2 lines too long and all lines are necessary. 2 lines can be
+    // removed by sacrificing
+    // the user's understanding, however I do not believe this is good programming
+    // design.
     private void editItem(String name) throws ItemAlreadyExists, InvalidTime {
         ArrayList<Day> days = daysOfItem(name);
         CalendarItem item = days.get(0).getItems().get(days.get(0).getItemCalled(name));
@@ -174,6 +172,8 @@ public class CalendarApp {
     // EFFECTS: edits the item into the new information
     private CalendarItem editItemInfo(String days, String name, String start, String end, String location,
             CalendarItem item) throws ItemAlreadyExists, InvalidTime {
+        LocalTime startTime = LocalTime.parse(start, format);
+        LocalTime endTime = LocalTime.parse(end, format);
         if (daysOfItem(name).size() != 0) {
             throw new ItemAlreadyExists();
         }
@@ -186,13 +186,13 @@ public class CalendarApp {
         if (end.equals("same")) {
             end = item.getEndTime().toString();
         }
-        if (LocalTime.parse(end, format).isBefore(LocalTime.parse(start, format))) {
+        if (endTime.isBefore(startTime)) {
             throw new InvalidTime();
         }
         if (location.equals("same")) {
             location = item.getLocation();
         }
-        return new CalendarItem(name, LocalTime.parse(start, format), LocalTime.parse(end, format), location);
+        return new CalendarItem(name, startTime, endTime, location);
     }
 
     // MODIFIES: this, CalendarItem, Calendar, Day
@@ -298,6 +298,12 @@ public class CalendarApp {
             }
         }
         return daysItemIsIn;
+    }
+
+    // EFFECTS: prints out an error message and waits for user acknowledgment
+    private void printError(String message) {
+        System.out.println(message);
+        waitForUser();
     }
 
     // EFFECTS: waits for user acknowledgment after an error
