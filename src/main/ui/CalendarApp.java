@@ -160,6 +160,11 @@ public class CalendarApp {
         if (newEndTime.equals("same")) {
             newEndTime = item.getEndTime().toString();
         }
+        if (LocalTime.parse(newEndTime, format).isBefore(LocalTime.parse(newStartTime, format))) {
+            System.out.println("End time must be after start time.");
+            waitForUser();
+            return;
+        }
         System.out.print("Enter the new location: ");
         String newLocation = userInput.nextLine();
         if (newLocation.equals("same")) {
@@ -190,6 +195,11 @@ public class CalendarApp {
         String itemStartTime = userInput.nextLine();
         System.out.print("Enter the ending time (in HH:mm form): ");
         String itemEndTime = userInput.nextLine();
+        if (LocalTime.parse(itemEndTime, format).isBefore(LocalTime.parse(itemStartTime, format))) {
+            System.out.println("End time must be after start time.");
+            waitForUser();
+            return;
+        }
         System.out.print("Enter the name of the location: ");
         String location = userInput.nextLine();
         applyCourseToEachDay(days, itemName, LocalTime.parse(itemStartTime, format),
