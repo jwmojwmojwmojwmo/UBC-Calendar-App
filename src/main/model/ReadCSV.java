@@ -9,13 +9,13 @@ import java.util.Map.Entry;
 
 //A class that handles reading data from a CSV and passing into Course to create courses
 public class ReadCSV {
-    String courseName;
-    String courseInfo;
-    ArrayList<DayOfWeek> courseDays;
-    LocalTime courseStart;
-    LocalTime courseEnd;
-    String courseLocation;
-    ArrayList<Day> daysOfWeek;
+    private String courseName;
+    private String courseInfo;
+    private ArrayList<DayOfWeek> courseDays;
+    private LocalTime courseStart;
+    private LocalTime courseEnd;
+    private String courseLocation;
+    private ArrayList<Day> daysOfWeek;
 
     final Map<String, DayOfWeek> dayMap = Map.of(
             "Mon", DayOfWeek.MONDAY,

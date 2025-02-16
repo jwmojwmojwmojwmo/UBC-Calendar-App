@@ -118,7 +118,7 @@ public class CalendarApp {
                 addNewItem();
             } else if (command.equals("c")) {
                 changeCalendarName();
-            } else if (daysOfItem(command).size() != 0) {
+            } else if (calendar.daysOfItem(command).size() != 0) {
                 editItem(command);
             } else {
                 String[] dayAndTime = command.split(",");
@@ -141,7 +141,7 @@ public class CalendarApp {
     // the user's understanding, however I do not believe this is good programming
     // design.
     private void editItem(String name) throws ItemAlreadyExists, InvalidTime {
-        ArrayList<Day> days = daysOfItem(name);
+        ArrayList<Day> days = calendar.daysOfItem(name);
         CalendarItem item = days.get(0).getItems().get(days.get(0).getItemCalled(name));
         String oldName = item.getName();
         System.out.println("For any information that should not be changed, type \"same\".");
@@ -149,7 +149,7 @@ public class CalendarApp {
         System.out.print("Enter the new days of the week numerically, separated by commas (ex: \"1, 3, 5\"): ");
         String newDays = userInput.nextLine();
         if (newDays.equals("REMOVE")) {
-            changeDays(oldName, item, new ArrayList<>());
+            calendar.removeItem(oldName);
             return;
         }
         System.out.print("Enter new name: ");
@@ -162,9 +162,9 @@ public class CalendarApp {
         String newLocation = userInput.nextLine();
         item = editItemInfo(newDays, newName, newStartTime, newEndTime, newLocation, item);
         if (newDays.equals("same")) {
-            changeDays(oldName, item, days);
+            calendar.changeItemInfo(oldName, item);
         } else {
-            changeDays(oldName, item, newDays);
+            calendar.changeDays(oldName, item, newDays);
         }
     }
 
@@ -172,9 +172,7 @@ public class CalendarApp {
     // EFFECTS: edits the item into the new information
     private CalendarItem editItemInfo(String days, String name, String start, String end, String location,
             CalendarItem item) throws ItemAlreadyExists, InvalidTime {
-        LocalTime startTime = LocalTime.parse(start, format);
-        LocalTime endTime = LocalTime.parse(end, format);
-        if (daysOfItem(name).size() != 0) {
+        if (calendar.daysOfItem(name).size() != 0) {
             throw new ItemAlreadyExists();
         }
         if (name.equals("same")) {
@@ -186,6 +184,8 @@ public class CalendarApp {
         if (end.equals("same")) {
             end = item.getEndTime().toString();
         }
+                LocalTime startTime = LocalTime.parse(start, format);
+        LocalTime endTime = LocalTime.parse(end, format);
         if (endTime.isBefore(startTime)) {
             throw new InvalidTime();
         }
@@ -202,7 +202,7 @@ public class CalendarApp {
         String days = userInput.nextLine();
         System.out.print("Enter the name of the item: ");
         String itemName = userInput.nextLine();
-        if (daysOfItem(itemName).size() != 0) {
+        if (calendar.daysOfItem(itemName).size() != 0) {
             throw new ItemAlreadyExists();
         }
         System.out.print("Enter the starting time (in HH:mm form): ");
@@ -214,7 +214,7 @@ public class CalendarApp {
         }
         System.out.print("Enter the name of the location: ");
         String location = userInput.nextLine();
-        applyCourseToEachDay(days, itemName, LocalTime.parse(itemStartTime, format),
+        calendar.applyCourseToEachDay(days, itemName, LocalTime.parse(itemStartTime, format),
                 LocalTime.parse(itemEndTime, format), location);
     }
 
@@ -243,70 +243,13 @@ public class CalendarApp {
         }
     }
 
-    // MODIFIES: this, Day, CalendarItem
-    // EFFECTS: helper method that takes an item, removes it from all days it used
-    // to be in, and adds it to all the new days it should be in, which is given as
-    // a string. Used when the user inputs new days to add the item to.
-    private void changeDays(String name, CalendarItem item, String days) {
-        for (Day day : daysOfItem(name)) {
-            day.removeItem(day.getItemCalled(name));
-        }
-        applyCourseToEachDay(days, item.getName(), item.getStartTime(), item.getEndTime(), item.getLocation());
-    }
-
-    // MODIFIES: this, Day, CalendarItem
-    // EFFECTS: helper method that takes an item, removes it from all days it used
-    // to be in, and adds the item back into the same days, with new information.
-    // Used when the user chooses to keep the days the same when editing
-    // information.
-    private void changeDays(String name, CalendarItem item, ArrayList<Day> days) {
-        for (Day day : daysOfItem(name)) {
-            day.removeItem(day.getItemCalled(name));
-        }
-        applyCourseToEachDay(days, item.getName(), item.getStartTime(), item.getEndTime(), item.getLocation());
-    }
-
-    // MODIFIES: this, Day, CalendarItem, Calendar
-    // EFFECTS: helper method that creates a new course using a string of given
-    // days, based on the parameters
-    private void applyCourseToEachDay(String days, String name, LocalTime start, LocalTime end, String location) {
-        String[] eachDay = days.split(",");
-        for (String string : eachDay) {
-            calendar.getDaysOfWeek().get(Integer.valueOf(string.trim()) - 1)
-                    .addItem(new CalendarItem(name, start, end, location));
-        }
-    }
-
-    // MODIFIES: this
-    // EFFECTS: helper method that creates a new course using a list of given days,
-    // based on the parameters
-    private void applyCourseToEachDay(ArrayList<Day> days, String name, LocalTime start, LocalTime end,
-            String location) {
-        for (Day day : days) {
-            day.addItem(new CalendarItem(name, start, end, location));
-        }
-    }
-
-    // EFFECTS: helper method that returns the days that the given item is in
-    private ArrayList<Day> daysOfItem(String name) {
-        ArrayList<Day> daysItemIsIn = new ArrayList<Day>();
-        for (Day day : calendar.getDaysOfWeek()) {
-            for (CalendarItem item : day.getItems()) {
-                if (item.getName().equals(name)) {
-                    daysItemIsIn.add(day);
-                }
-            }
-        }
-        return daysItemIsIn;
-    }
-
     // EFFECTS: prints out an error message and waits for user acknowledgment
     private void printError(String message) {
         System.out.println(message);
         waitForUser();
     }
 
-    // EFFECTS: waits for user acknowledgment after an error
+    // EFFECTS: waits for user acknowledgment
     private void waitForUser() {
         System.out.println("Press enter to continue: ");
         userInput.nextLine();

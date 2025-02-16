@@ -66,6 +66,10 @@ public class Day {
         items = new ArrayList<CalendarItem>();
     }
 
+    public CalendarItem getItemAt(int index) {
+        return items.get(index);
+    }
+
     public DayOfWeek getDay() {
         return day;
     }
