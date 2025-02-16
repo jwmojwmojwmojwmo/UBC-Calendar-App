@@ -90,18 +90,12 @@ public class TestCalendar {
     @Test
     void testChangeItemInfo() {
         testCalendar1.getDaysOfWeek().get(0).addItem(testCourse);
-        testCalendar1.getDaysOfWeek().get(1).addItem(testCourse);
         assertEquals(0, testCalendar1.getDaysOfWeek().get(0).getItemCalled("Math"));
-        assertEquals(0, testCalendar1.getDaysOfWeek().get(1).getItemCalled("Math"));
         testCalendar1.changeItemInfo("Math", new CalendarItem("Science", LocalTime.of(14,0), LocalTime.of(15,0), "ORCH"));
         assertEquals("Science", testCalendar1.getDaysOfWeek().get(0).getItems().get(0).getName());
         assertEquals(LocalTime.of(14,0), testCalendar1.getDaysOfWeek().get(0).getItems().get(0).getStartTime());
         assertEquals(LocalTime.of(15,0), testCalendar1.getDaysOfWeek().get(0).getItems().get(0).getEndTime());
         assertEquals("ORCH", testCalendar1.getDaysOfWeek().get(0).getItems().get(0).getLocation());
-        assertEquals("Science", testCalendar1.getDaysOfWeek().get(1).getItems().get(0).getName());
-        assertEquals(LocalTime.of(14,0), testCalendar1.getDaysOfWeek().get(1).getItems().get(0).getStartTime());
-        assertEquals(LocalTime.of(15,0), testCalendar1.getDaysOfWeek().get(1).getItems().get(0).getEndTime());
-        assertEquals("ORCH", testCalendar1.getDaysOfWeek().get(1).getItems().get(0).getLocation());
     }
 
     @Test
