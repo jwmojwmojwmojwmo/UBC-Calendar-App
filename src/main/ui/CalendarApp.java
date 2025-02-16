@@ -232,6 +232,7 @@ public class CalendarApp {
         System.out.println(calendar.getName() + " Calendar");
         System.out.println();
         System.out.println("Current time: " + LocalTime.now().format(format));
+        System.out.println();
         System.out.println("                   "
                 + currentDay.getDay().toString().substring(0, 1)
                 + currentDay.getDay().toString().toLowerCase().substring(1) + "\'s Schedule:");
