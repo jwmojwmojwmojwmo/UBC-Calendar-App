@@ -36,7 +36,7 @@ public class TestCalendar {
     void testAddCourses() {
         try {
             assertEquals(new ArrayList<CalendarItem>(), testCalendar1.getDaysOfWeek().get(0).getItems());
-            testCalendar1.addCourses("src\\test\\model\\TestCSVFile.csv");
+            testCalendar1.addCourses("data\\TestCSVFile.csv");
             assertEquals("CPSC_V 210-202", testCalendar1.getDaysOfWeek().get(0).getItems().get(0).getName());
             assertEquals(LocalTime.of(11, 0), testCalendar1.getDaysOfWeek().get(0).getItems().get(0).getStartTime());
             assertEquals(LocalTime.of(12, 0), testCalendar1.getDaysOfWeek().get(0).getItems().get(0).getEndTime());
@@ -48,7 +48,7 @@ public class TestCalendar {
     @Test
     void testBrokenAddCourses() {
         try {
-            testCalendar2.addCourses("src\\test\\model\\TestBrokenCSVFile.csv");
+            testCalendar2.addCourses("data\\TestBrokenCSVFile.csv");
             for (Day day : testCalendar1.getDaysOfWeek()) {
                 assertEquals(0, day.getItems().size());
             }

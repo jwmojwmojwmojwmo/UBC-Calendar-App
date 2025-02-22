@@ -14,3 +14,6 @@ User Stories:
 - As a user, I want to be able to see a list of what I have to do each day.
 - As a user, I want to be able to add extracurrculars and other classes that I have to do on top of my class schedule, and specify the time and location.
 - As a user, I want to easily find what I have to do at a specific time.
+- As a user, I want to be able to save my calendar at any time.
+- As a user, I want to be able to load a saved calendar at any time.
+- As a user, I want the calendar to be able to save automatically, so I don't have to worry about saving it manually.
