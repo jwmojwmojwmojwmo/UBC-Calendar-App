@@ -16,4 +16,4 @@ User Stories:
 - As a user, I want to easily find what I have to do at a specific time.
 - As a user, I want to be able to save my calendar at any time.
 - As a user, I want to be able to load a saved calendar at any time.
-- As a user, I want the calendar to be able to save automatically, so I don't have to worry about saving it manually.
+- As a user, I want the calendar to save automatically when I quit the program.

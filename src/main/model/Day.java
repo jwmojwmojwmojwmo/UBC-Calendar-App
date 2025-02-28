@@ -49,11 +49,16 @@ public class Day {
         return "Nothing found!";
     }
 
+    
+    public CalendarItem getItemAt(int index) {
+        return items.get(index);
+    }
+
     // EFFECTS: returns the index of the item with the given name in the given day,
     // or returns -1
     public Integer getItemCalled(String name) {
         for (int i = 0; i < getItems().size(); i++) {
-            if (getItems().get(i).getName().equals(name)) {
+            if (getItems().get(i).getName().equals(name)) {     
                 return i;
             }
         }
@@ -64,10 +69,6 @@ public class Day {
     // EFFECTS: removes all items in this day
     public void removeAll() {
         items = new ArrayList<CalendarItem>();
-    }
-
-    public CalendarItem getItemAt(int index) {
-        return items.get(index);
     }
 
     public DayOfWeek getDay() {

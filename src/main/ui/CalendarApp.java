@@ -184,7 +184,7 @@ public class CalendarApp {
         if (end.equals("same")) {
             end = item.getEndTime().toString();
         }
-                LocalTime startTime = LocalTime.parse(start, format);
+        LocalTime startTime = LocalTime.parse(start, format);
         LocalTime endTime = LocalTime.parse(end, format);
         if (endTime.isBefore(startTime)) {
             throw new InvalidTime();
