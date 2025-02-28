@@ -5,6 +5,9 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 //Represents a day of the week with a list of items
 public class Day {
 
@@ -69,6 +72,16 @@ public class Day {
     // EFFECTS: removes all items in this day
     public void removeAll() {
         items = new ArrayList<CalendarItem>();
+    }
+
+    // MODIFIES: JsonWriter
+    // EFFECTS: converts day to information .json file
+    public JSONArray toJson() {
+        JSONArray jsonDay = new JSONArray();
+        for (CalendarItem calendarItem : items) {
+            jsonDay.put(calendarItem.toJson());
+        }
+        return jsonDay;
     }
 
     public DayOfWeek getDay() {

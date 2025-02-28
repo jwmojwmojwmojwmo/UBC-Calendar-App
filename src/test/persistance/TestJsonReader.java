@@ -21,7 +21,7 @@ public class TestJsonReader {
     @Test
     void testReadInvalidFile() {
         try {
-            testCalendar = testReader.read("thisfilepathdoesNOTEXIST");
+            testCalendar = testReader.read("data\\thisfilepathdoesNOTEXIST");
             fail("Exception expected");
         } catch (Exception e) {
         }

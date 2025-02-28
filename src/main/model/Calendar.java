@@ -8,6 +8,8 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import org.json.JSONObject;
+
 //Represents a Calendar with a name
 public class Calendar {
 
@@ -23,7 +25,6 @@ public class Calendar {
         daysOfWeek.add(new Day(DayOfWeek.THURSDAY));
         daysOfWeek.add(new Day(DayOfWeek.FRIDAY));
     }
-
     // MOFDIFIES: this, Day
     // REQUIRES: The file path must lead to a CSV of registered courses as created
     // by Workday
@@ -95,10 +96,24 @@ public class Calendar {
         }
     }
 
+
+    // MODIFIES: this, Day
+    // EFFECTS: removes given item from all days
     public void removeItem(String name) {
         for (Day day: daysOfItem(name)) {
             day.removeItem(day.getItemCalled(name));
         }
+    }
+
+    // MODIFIES: JsonWriter
+    // EFFECTS: converts calendar to .json file
+    public JSONObject toJson() throws FileNotFoundException{
+        JSONObject jsonCalendar = new JSONObject();
+        jsonCalendar.put("name", name);
+        for (Day day : daysOfWeek) {
+            jsonCalendar.put(day.getDay().toString(), day.toJson());
+        }
+        return jsonCalendar;
     }
 
     // MODIFIES: this

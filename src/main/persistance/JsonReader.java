@@ -4,7 +4,7 @@ import model.Calendar;
 
 //Represents a tool that reads a JSON file into a calendar
 public class JsonReader {
-
+    
     public JsonReader() {
 
     }

@@ -3,6 +3,7 @@ package ui;
 import model.Calendar;
 import model.CalendarItem;
 import model.Day;
+import persistance.JsonWriter;
 
 import java.io.FileNotFoundException;
 import java.time.LocalTime;
@@ -19,6 +20,7 @@ public class CalendarApp {
     Calendar calendar;
     Day currentDay;
     DateTimeFormatter format;
+    JsonWriter writer = new JsonWriter();
 
     // EFFECTS: gets CSV file from user and runs the Calendar
     public CalendarApp() {
