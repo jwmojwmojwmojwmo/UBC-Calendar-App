@@ -8,6 +8,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 //Represents a Calendar with a name
@@ -107,7 +108,7 @@ public class Calendar {
 
     // MODIFIES: JsonWriter
     // EFFECTS: converts calendar to .json file
-    public JSONObject toJson() throws FileNotFoundException{
+    public JSONObject toJson() {
         JSONObject jsonCalendar = new JSONObject();
         jsonCalendar.put("name", name);
         for (Day day : daysOfWeek) {

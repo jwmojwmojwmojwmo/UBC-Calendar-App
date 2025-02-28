@@ -25,7 +25,7 @@ public class TestJsonWriter {
     @Test
     void testWriteInvalidFile() {
         try {
-            testWriter.write(testCalendar, "data\\thisfilepathdoesNOTEXIST");
+            testWriter.write(testCalendar, "hi=z/data\\thisfilepathdoesNOTEXIST");
             fail("Exception expected");
         } catch (Exception e) {
         }
