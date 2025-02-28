@@ -1,0 +1,28 @@
+{
+    "name": "test",
+    "Monday": [
+        {
+            "name": "CPSC210",
+            "start": "11:00",
+            "end": "12:00",
+            "location": "LIFE"
+        }, 
+        {
+            "name": "SCIE113",
+            "start": "13:00",
+            "end": "14:00",
+            "location": "LSK"
+        }
+    ],
+    "Tuesday": [],
+    "Wednesday": [
+        {
+            "name": "MATH101",
+            "start": "14:00",
+            "end": "16:00",
+            "location": "WESB"
+        }
+    ],
+    "Thursday": [],
+    "Friday": []
+}
