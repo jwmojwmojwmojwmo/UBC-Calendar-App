@@ -2,6 +2,8 @@ package persistance;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalTime;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -37,7 +39,9 @@ public class TestJsonReader {
             assertEquals(0, testCalendar.getDaysOfWeek().get(2).getItems().size());
             assertEquals(0, testCalendar.getDaysOfWeek().get(3).getItems().size());
             assertEquals(0, testCalendar.getDaysOfWeek().get(4).getItems().size());
-        } catch (Exception e) {
+        } catch (FileNotFoundException e) {
+            fail("Exception not expected");
+        } catch (IOException i) {
             fail("Exception not expected");
         }
     }
@@ -58,7 +62,9 @@ public class TestJsonReader {
             assertEquals("MATH101", testCalendar.getDaysOfWeek().get(2).getItemAt(0).getName());
             assertEquals(0, testCalendar.getDaysOfWeek().get(3).getItems().size());
             assertEquals(0, testCalendar.getDaysOfWeek().get(4).getItems().size());
-        } catch (Exception e) {
+        } catch (FileNotFoundException e) {
+            fail("Exception not expected");
+        } catch (IOException i) {
             fail("Exception not expected");
         }
     }

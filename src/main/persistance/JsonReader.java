@@ -30,7 +30,7 @@ public class JsonReader {
         JSONArray arrayOfItems;
         Calendar calendar = new Calendar(jsonContent.getString("name"));
         for (Day day : calendar.getDaysOfWeek()) {
-            arrayOfItems = jsonContent.getJSONArray(day.toString());
+            arrayOfItems = jsonContent.getJSONArray(day.getDay().toString());
             for (int i = 0; i < arrayOfItems.length(); i++) {
                 item = arrayOfItems.getJSONObject(i);
                 day.addItem(new CalendarItem(item.getString("name"), LocalTime.parse(item.getString("start"), format),
