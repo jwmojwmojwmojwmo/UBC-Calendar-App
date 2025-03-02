@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 //Represents a day of the week with a list of items
 public class Day {

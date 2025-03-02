@@ -1,0 +1,91 @@
+{
+ "WEDNESDAY": [
+  {
+   "name": "CPSC_V 210-202",
+   "start": "11:00",
+   "end": "12:00",
+   "location": "LIFE"
+  },
+  {
+   "name": "SCIE_V 113-13I",
+   "start": "13:00",
+   "end": "14:00",
+   "location": "LSK"
+  },
+  {
+   "name": "MATH_V 101-2B3",
+   "start": "14:00",
+   "end": "16:00",
+   "location": "WESB"
+  }
+ ],
+ "MONDAY": [
+  {
+   "name": "CPSC_V 210-202",
+   "start": "11:00",
+   "end": "12:00",
+   "location": "LIFE"
+  },
+  {
+   "name": "SCIE_V 113-13I",
+   "start": "13:00",
+   "end": "14:00",
+   "location": "LSK"
+  }
+ ],
+ "THURSDAY": [
+  {
+   "name": "CPSC_V 121-201",
+   "start": "09:30",
+   "end": "11:00",
+   "location": "CIRS"
+  },
+  {
+   "name": "CPSC_V 210-L2K",
+   "start": "15:00",
+   "end": "17:00",
+   "location": "ICCS"
+  }
+ ],
+ "TUESDAY": [
+  {
+   "name": "CPSC_V 121-201",
+   "start": "09:30",
+   "end": "11:00",
+   "location": "CIRS"
+  },
+  {
+   "name": "CPSC_V 121-T2C",
+   "start": "13:00",
+   "end": "14:00",
+   "location": "FSC"
+  },
+  {
+   "name": "CPSC_V 121-L2C",
+   "start": "17:00",
+   "end": "19:00",
+   "location": "ICCS"
+  }
+ ],
+ "FRIDAY": [
+  {
+   "name": "CPSC_V 210-202",
+   "start": "11:00",
+   "end": "12:00",
+   "location": "LIFE"
+  },
+  {
+   "name": "SCIE_V 113-13I",
+   "start": "13:00",
+   "end": "14:00",
+   "location": "LSK"
+  },
+  {
+   "name": "MATH_V 101-B35",
+   "start": "15:00",
+   "end": "16:00",
+   "location": "BUCH"
+  }
+ ],
+ "name": "aoeu"
+}

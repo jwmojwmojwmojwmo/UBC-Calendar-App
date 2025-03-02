@@ -2,7 +2,6 @@ package model;
 
 import java.time.LocalTime;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 //Represents an item on a calendar

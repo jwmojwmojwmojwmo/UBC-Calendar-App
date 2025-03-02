@@ -3,9 +3,11 @@ package ui;
 import model.Calendar;
 import model.CalendarItem;
 import model.Day;
+import persistance.JsonReader;
 import persistance.JsonWriter;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -20,12 +22,17 @@ public class CalendarApp {
     Calendar calendar;
     Day currentDay;
     DateTimeFormatter format;
-    JsonWriter writer = new JsonWriter();
+    JsonWriter writer;
+    JsonReader reader;
+    String jsonFilePath;
 
     // EFFECTS: gets CSV file from user and runs the Calendar
     public CalendarApp() {
         userInput = new Scanner(System.in);
+        writer = new JsonWriter();
+        reader = new JsonReader();
         format = DateTimeFormatter.ofPattern("HH:mm");
+        jsonFilePath = "data\\Calendar.json";
         clearConsole();
         makeNewCalendar();
         getCSV();
@@ -77,9 +84,12 @@ public class CalendarApp {
             }
         } while (!validInput);
     }
-
+    
     // MODIFIES: this, Day, CalendarItem, Calendar
     // EFFECTS: displays available commands and gets next input from user
+    @SuppressWarnings("methodlength")
+    // This method is long because of the explanation required for the user. There
+    // is not much actual code.
     private void runCalendar() {
         while (true) {
             displayCalendar();
@@ -90,36 +100,44 @@ public class CalendarApp {
             System.out.println(
                     "Enter a day of week in numerical form and a time, separated by commas (ex. \"1, 12:00\"),");
             System.out.println("to find what item is at that time.");
+            System.out.println("Enter \"s\" to save the calendar to the ./data directory.");
+            System.out.println("Enter \"l\" to load the calendar from the ./data directory.");
             System.out.println("Enter \"q\" to quit.");
             String nextCommand = userInput.nextLine();
             try {
                 processCommand(nextCommand);
             } catch (NumberFormatException | IndexOutOfBoundsException e) {
-                printError("Invalid inputs. Please double-check your inputs.");
+                printAndWait("Invalid inputs. Please double-check your inputs.");
             } catch (DateTimeParseException e) {
-                printError("Invalid time. Times must be in \"HH:mm\" format.");
+                printAndWait("Invalid time. Times must be in \"HH:mm\" format.");
             } catch (ItemAlreadyExists e) {
-                printError("This name is already taken!");
+                printAndWait("This name is already taken!");
             } catch (InvalidTime e) {
-                printError("End time must be after start time.");
+                printAndWait("End time must be after start time.");
+            } catch (IOException e) {
+                printAndWait("File saving/loading encountered an error.");
             }
         }
     }
 
     // MODIFIES: this, Day, Calendar, CalendarItem
     // EFFECTS: processes input from user
-    private void processCommand(String command) throws ItemAlreadyExists, InvalidTime {
+    private void processCommand(String command) throws ItemAlreadyExists, InvalidTime, IOException {
         try {
             if (Integer.valueOf(command) >= 1 && Integer.valueOf(command) <= 5) {
                 currentDay = calendar.getDaysOfWeek().get(Integer.valueOf(command) - 1);
             }
         } catch (NumberFormatException e) {
             if (command.equals("q")) {
-                System.exit(0);
+                quitCalendar();
             } else if (command.equals("n")) {
                 addNewItem();
             } else if (command.equals("c")) {
                 changeCalendarName();
+            } else if (command.equals("s")) {
+                saveCalendar();
+            } else if (command.equals("l")) {
+                loadCalendar();
             } else if (calendar.daysOfItem(command).size() != 0) {
                 editItem(command);
             } else {
@@ -129,10 +147,33 @@ public class CalendarApp {
         }
     }
 
+    // EFFECTS: quits calendar and saves if user wants calendar to be saved
+    private void quitCalendar() throws FileNotFoundException {
+        System.out.println("Would you like to save the calendar? Y for yes, anything else for no.");
+        if (userInput.nextLine().toUpperCase().equals("Y")) {
+            saveCalendar();
+        }
+        System.exit(0);
+    }
+
+    // EFFECTS: saves the calendar to a .json file
+    private void saveCalendar() throws FileNotFoundException {
+        writer.write(calendar, jsonFilePath);
+        printAndWait("Saved!");
+    }
+
+    // MODIFIES: this, Calendar, Day, CalendarItem
+    // EFFECTS: saves the calendar to a .json file
+    private void loadCalendar() throws IOException {
+        calendar = reader.read(jsonFilePath);
+        currentDay = calendar.getDaysOfWeek().get(0);
+        printAndWait("Calendar loaded!");
+    }
+
+    // EFFECTS: outputs the item at the given day and time
     private void getItemAt(String day, String time) {
-        System.out.println(calendar.getDaysOfWeek().get(Integer.valueOf(day) - 1)
+        printAndWait(calendar.getDaysOfWeek().get(Integer.valueOf(day) - 1)
                 .getItemAt(LocalTime.parse(time, format)));
-        waitForUser();
     }
 
     // MODIFIES: this, Day, CalendarItem, Calendar
@@ -246,14 +287,9 @@ public class CalendarApp {
         }
     }
 
-    // EFFECTS: prints out an error message and waits for user acknowledgment
-    private void printError(String message) {
+    // EFFECTS: prints out a message and waits for user acknowledgment
+    private void printAndWait(String message) {
         System.out.println(message);
-        waitForUser();
-    }
-
-    // EFFECTS: waits for user acknowledgment
-    private void waitForUser() {
         System.out.println("Press enter to continue: ");
         userInput.nextLine();
     }
