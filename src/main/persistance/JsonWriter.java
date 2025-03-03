@@ -9,7 +9,9 @@ import java.io.FileNotFoundException;
 
 import model.Calendar;
 
-//Represents a tool that writes the calendar into a JSON file
+// Represents a tool that writes the calendar into a JSON file
+// Some behaviour of code modelled on JsonSerialisationDemo:
+// CPSC210. (2020, October 17). JsonSerializationDemo. GitHub. Retrieved March 2, 2025, from https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
 public class JsonWriter {
     private PrintWriter writer;
 
