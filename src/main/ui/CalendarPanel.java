@@ -17,6 +17,7 @@ import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -24,6 +25,8 @@ import java.awt.Insets;
 import java.io.FileNotFoundException;
 
 import model.Calendar;
+import model.CalendarItem;
+import model.Day;
 
 public class CalendarPanel {
     JFrame calendarFrame;
@@ -126,15 +129,16 @@ public class CalendarPanel {
     private void runCalendar() {
         fileMenu.add(saveItem);
         menuBar.add(editMenu);
+        calendarFrame.remove(welcomeLabel);
+        calendarFrame.setTitle(calendar.getName());
         drawCalendar();
     }
 
     private void drawCalendar() {
-        calendarFrame.remove(welcomeLabel);
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.BOTH;
-        c.insets = new Insets(10, 50, 10, 50); 
+        c.insets = new Insets(0, 60, 15, 60); 
         for (int i = 0; i <= 23; i++) {
             c.gridx = 0;
             c.gridy = i + 1;
@@ -145,6 +149,19 @@ public class CalendarPanel {
             c.gridx = i;
             c.gridy = 0;
             panel.add(new JLabel(headers[i]), c);
+        }
+        c.insets = new Insets(0,0,0,0);
+        for (Day day : calendar.getDaysOfWeek()) {
+            for (CalendarItem item : day.getItems()) {
+                c.gridx = day.getDay().getValue();
+                c.gridy = item.getStartTime().getHour() + 1;
+                c.gridheight = item.getEndTime().getHour() - item.getStartTime().getHour();
+                JButton button = new JButton("<html>" + item.getName() + "<br>" 
+                + item.getStartTime().toString() + "-" + item.getEndTime().toString() + "<br>" + item.getLocation());
+                button.setEnabled(false);
+                button.setBackground(Color.BLUE);
+                panel.add(button, c);
+            }
         }
         calendarFrame.add(panel);
         calendarFrame.revalidate();
