@@ -9,12 +9,18 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.io.FileNotFoundException;
 
 import model.Calendar;
@@ -125,11 +131,22 @@ public class CalendarPanel {
 
     private void drawCalendar() {
         calendarFrame.remove(welcomeLabel);
-        calendarFrame.setLayout(new GridLayout(1,6));
-        calendarFrame.add(new JLabel("Time"));
-        for (int i = 0; i <= 4; i++) {
-            calendarFrame.add(new JLabel(calendar.getDaysOfWeek().get(i).getDay().toString()));
+        JPanel panel = new JPanel(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.BOTH;
+        c.insets = new Insets(10, 50, 10, 50); 
+        for (int i = 0; i <= 23; i++) {
+            c.gridx = 0;
+            c.gridy = i + 1;
+            panel.add(new JLabel(Integer.toString(i) + ":00"), c);
         }
+        String[] headers = {"Time", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
+        for (int i = 0; i < headers.length; i++) {
+            c.gridx = i;
+            c.gridy = 0;
+            panel.add(new JLabel(headers[i]), c);
+        }
+        calendarFrame.add(panel);
         calendarFrame.revalidate();
         calendarFrame.repaint();
     }
