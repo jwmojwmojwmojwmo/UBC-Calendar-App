@@ -1,6 +1,5 @@
 package ui;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -15,22 +14,24 @@ import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.BorderLayout;
-import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
+import java.awt.GridLayout;
 import java.io.FileNotFoundException;
 
 import model.Calendar;
 
 public class CalendarPanel {
     JFrame calendarFrame;
-    JPanel newCalendarFrame;
+    JPanel newCalendarPanel;
+    JMenuBar menuBar;
+    JMenu fileMenu;
+    JMenu editMenu;
     JMenuItem newItem;
     JMenuItem saveItem;
     JMenuItem loadItem;
-    String filePath;
+    String filePath = "";
     Calendar calendar;
+    JLabel welcomeLabel;
+    boolean calendarInitialised = false;
 
     final int frameWidth = 1280;
     final int frameHeight = 720;
@@ -40,39 +41,42 @@ public class CalendarPanel {
         calendarFrame.setSize(frameWidth, frameHeight);
         calendarFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         calendarFrame.setLayout(new BorderLayout());
-        JMenuBar menuBar = new JMenuBar();
-        JMenu fileMenu = new JMenu("File");
+        menuBar = new JMenuBar();
+        fileMenu = new JMenu("File");
         newItem = new JMenuItem("New");
         saveItem = new JMenuItem("Save");
         loadItem = new JMenuItem("Load");
+        editMenu = new JMenu("Edit");
         fileMenu.add(newItem);
-        fileMenu.add(saveItem);
         fileMenu.add(loadItem);
         menuBar.add(fileMenu);
-        JLabel welcomeLabel = new JLabel("Start a new calendar, or load a previously saved one!");
+        welcomeLabel = new JLabel("Start a new calendar, or load a previously saved one!");
         welcomeLabel.setHorizontalAlignment(SwingConstants.CENTER);
         welcomeLabel.setVerticalAlignment(SwingConstants.CENTER);
         calendarFrame.setJMenuBar(menuBar);
         calendarFrame.add(welcomeLabel);
         calendarFrame.setVisible(true);
-        runCalendar();
+        startCalendar();
     }
 
-    private void runCalendar() {
+    private void startCalendar() {
         newItem.addActionListener(e -> {
             try {
                 newCalendar();
+                runCalendar();
             } catch (FileNotFoundException f) {
                 JOptionPane.showMessageDialog(calendarFrame, "File not found!");
             }
         });
-        saveItem.addActionListener(e -> saveCalendar());
-        loadItem.addActionListener(e -> loadCalendar());
+        loadItem.addActionListener(e -> {
+            loadCalendar();
+            runCalendar();
+        });
     }
 
     private void newCalendar() throws FileNotFoundException {
-        newCalendarFrame = new JPanel();
-        newCalendarFrame.setSize(frameWidth, frameHeight);
+        newCalendarPanel = new JPanel();
+        newCalendarPanel.setSize(frameWidth, frameHeight);
         JLabel nameLabel = new JLabel("Enter name of calendar: ");
         JTextField nameText = new JTextField(10);
         JLabel csvLabel = new JLabel("Enter CSV file path, or leave blank: ");
@@ -82,14 +86,14 @@ public class CalendarPanel {
             filePath = fileExplorer();
             csvText.setText(filePath);
         });
-        newCalendarFrame.add(nameLabel);
-        newCalendarFrame.add(nameText);
-        newCalendarFrame.add(csvLabel);
-        newCalendarFrame.add(csvText);
-        newCalendarFrame.add(csvButton);
-        JOptionPane.showMessageDialog(calendarFrame, newCalendarFrame);
+        newCalendarPanel.add(nameLabel);
+        newCalendarPanel.add(nameText);
+        newCalendarPanel.add(csvLabel);
+        newCalendarPanel.add(csvText);
+        newCalendarPanel.add(csvButton);
+        JOptionPane.showMessageDialog(calendarFrame, newCalendarPanel);
         calendar = new Calendar(nameText.getText());
-        if (!(filePath.equals(""))) {
+        if (!(filePath.isEmpty())) {
             calendar.addCourses(filePath);
         }
     }
@@ -111,5 +115,22 @@ public class CalendarPanel {
         } else {
             return "";
         }
+    }
+
+    private void runCalendar() {
+        fileMenu.add(saveItem);
+        menuBar.add(editMenu);
+        drawCalendar();
+    }
+
+    private void drawCalendar() {
+        calendarFrame.remove(welcomeLabel);
+        calendarFrame.setLayout(new GridLayout(1,6));
+        calendarFrame.add(new JLabel("Time"));
+        for (int i = 0; i <= 4; i++) {
+            calendarFrame.add(new JLabel(calendar.getDaysOfWeek().get(i).getDay().toString()));
+        }
+        calendarFrame.revalidate();
+        calendarFrame.repaint();
     }
 }
