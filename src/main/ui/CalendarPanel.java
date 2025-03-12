@@ -69,6 +69,8 @@ public class CalendarPanel {
     final int frameWidth = 1280;
     final int frameHeight = 720;
 
+    // MODIFIES: this
+    // EFFECTS: Creates the calendar window when no calendar is active
     public CalendarPanel() {
         calendarFrame = new JFrame("Calendar");
         calendarFrame.setSize(frameWidth, frameHeight);
@@ -92,6 +94,9 @@ public class CalendarPanel {
         startCalendar();
     }
 
+    // MODIFIES: this
+    // EFFECTS: Adds buttons and action listeners to the calendar window when no
+    // calendar is active
     private void startCalendar() {
         newItem.addActionListener(e -> {
             try {
@@ -107,6 +112,8 @@ public class CalendarPanel {
         });
     }
 
+    // MODIFIES: this, calendar
+    // EFFECTS: Makes new calendar
     private void newCalendar() throws FileNotFoundException {
         mainPanel = new JPanel();
         newCalendarPanel = new JPanel();
@@ -132,14 +139,21 @@ public class CalendarPanel {
         }
     }
 
+    // MODIFIES: this
+    // REQUIRES: a calendar to be loaded in
+    // EFFECTS: Saves the current calendar to file
     private void saveCalendar() {
         JOptionPane.showMessageDialog(null, "Save");
     }
 
+    // MODIFIES: this, calendar
+    // EFFECTS: Loads a calendar from file
     private void loadCalendar() {
         JOptionPane.showMessageDialog(null, "Load");
     }
 
+    // MODIFIES: this
+    // EFFECTS: Helper method that allows the user to choose a file visually
     private String fileExplorer() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileFilter(new FileNameExtensionFilter("CSV Files", "csv"));
@@ -151,6 +165,8 @@ public class CalendarPanel {
         }
     }
 
+    // MODIFIES: this, calendar
+    // EFFECTS: Main method for running the calendar
     private void runCalendar() {
         setupCalendar();
         drawCalendar();
@@ -164,7 +180,7 @@ public class CalendarPanel {
             calendarFrame.remove(mainPanel);
             drawCalendar();
         });
-        newCalendarItem.addActionListener(e -> {
+        changeCalendarName.addActionListener(e -> {
             editName();
             calendarFrame.remove(mainPanel);
             drawCalendar();
@@ -174,6 +190,8 @@ public class CalendarPanel {
         });
     }
 
+    // MODIFIES: this, calendar
+    // EFFECTS: Method to add a new item to calendar
     private void newItem() {
         makeDialogueNewItem();
         addInterfaceNewItem();
@@ -187,6 +205,8 @@ public class CalendarPanel {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: Helper method that converts checkboxes of days of week into a string
     private String convertDays() {
         String days = "";
         if (mon.isSelected()) {
@@ -207,6 +227,8 @@ public class CalendarPanel {
         return days;
     }
 
+    // MODIFIES: this
+    // EFFECTS: Creates the pop-up for user to input new item information
     private void makeDialogueNewItem() {
         newItemPanel = new JPanel(new GridLayout(0, 2, 5, 5));
         daysLabel = new JLabel("Select days of week of item");
@@ -225,6 +247,8 @@ public class CalendarPanel {
         locationText = new JTextField(10);
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds items to pop-up for user to input new item information
     private void addInterfaceNewItem() {
         newItemPanel.add(daysLabel);
         newItemPanel.add(mon);
@@ -242,14 +266,27 @@ public class CalendarPanel {
         newItemPanel.add(locationText);
     }
 
+    // MODIFIES: this, calendar
+    // EFFECTS: Method to edit an existing item on the calendar
     private void editItem() {
 
     }
 
+    // MODIFIES: this, calendar
+    // EFFECTS: Method to edit the name of the calendar
     private void editName() {
-
+        JPanel editNamePanel = new JPanel();
+        JLabel nameCalendarLabel = new JLabel("Enter new name of calendar");
+        JTextField nameCalendarText = new JTextField(10);
+        editNamePanel.add(nameCalendarLabel);
+        editNamePanel.add(nameCalendarText);
+        int result = JOptionPane.showConfirmDialog(calendarFrame, editNamePanel, "Enter New Name", 2);
+        if (result == JOptionPane.OK_OPTION) {
+            calendar.changeName(nameCalendarText.getText().trim());
+        }
     }
 
+    // EFFECTS: Sets up calendar UI by modifying initial calendar UI when no calendar is loaded in
     private void setupCalendar() {
         fileMenu.add(saveItem);
         newCalendarItem = new JMenuItem("New Item");
@@ -260,10 +297,12 @@ public class CalendarPanel {
         editMenu.add(changeCalendarName);
         menuBar.add(editMenu);
         calendarFrame.remove(welcomeLabel);
-        calendarFrame.setTitle(calendar.getName());
     }
 
+    // MODIFIES: this
+    // EFFECTS: draws the calendar ui
     private void drawCalendar() {
+        calendarFrame.setTitle(calendar.getName());
         mainPanel = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.BOTH;
@@ -285,6 +324,8 @@ public class CalendarPanel {
         calendarFrame.repaint();
     }
 
+    // MODIFIES: this
+    // EFFECTS: helper method that draws items onto the calendar ui
     private void drawItemsToCalendar(GridBagConstraints c) {
         c.insets = new Insets(0, 0, 0, 0);
         for (Day day : calendar.getDaysOfWeek()) {
