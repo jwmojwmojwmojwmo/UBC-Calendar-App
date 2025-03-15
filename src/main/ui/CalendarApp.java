@@ -32,7 +32,7 @@ public class CalendarApp {
         writer = new JsonWriter();
         reader = new JsonReader();
         format = DateTimeFormatter.ofPattern("HH:mm");
-        jsonFilePath = "data\\Calendar.json";
+        jsonFilePath = "data/Calendar.json";
         clearConsole();
         makeNewCalendar();
         getCSV();

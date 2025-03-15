@@ -23,7 +23,7 @@ public class TestJsonReader {
     @Test
     void testReadInvalidFile() {
         try {
-            testCalendar = testReader.read("hi-zz/data\\thisfilepathdoesNOTEXIST");
+            testCalendar = testReader.read("hi-zz/data/thisfilepathdoesNOTEXIST");
             fail("Exception expected");
         } catch (Exception e) {
         }
@@ -32,7 +32,7 @@ public class TestJsonReader {
     @Test
     void testReadEmpty() {
         try {
-            testCalendar = testReader.read("data\\TestEmptySaveFile.json");
+            testCalendar = testReader.read("data/TestEmptySaveFile.json");
             assertEquals("test", testCalendar.getName());
             assertEquals(0, testCalendar.getDaysOfWeek().get(0).getItems().size());
             assertEquals(0, testCalendar.getDaysOfWeek().get(1).getItems().size());
@@ -49,7 +49,7 @@ public class TestJsonReader {
     @Test
     void testRead() {
         try {
-            testCalendar = testReader.read("data\\TestRealSaveFile.json");
+            testCalendar = testReader.read("data/TestRealSaveFile.json");
             assertEquals("test", testCalendar.getName());
             assertEquals(2, testCalendar.getDaysOfWeek().get(0).getItems().size());
             assertEquals("CPSC210", testCalendar.getDaysOfWeek().get(0).getItemAt(0).getName());

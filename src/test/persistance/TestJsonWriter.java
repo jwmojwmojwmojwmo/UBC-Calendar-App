@@ -25,7 +25,7 @@ public class TestJsonWriter {
     @Test
     void testWriteInvalidFile() {
         try {
-            testWriter.write(testCalendar, "hi=z/data\\thisfilepathdoesNOTEXIST");
+            testWriter.write(testCalendar, "hi=z/data/thisfilepathdoesNOTEXIST");
             fail("Exception expected");
         } catch (Exception e) {
         }
@@ -35,8 +35,8 @@ public class TestJsonWriter {
     void testWriteEmpty() {
         testWriter = new JsonWriter();
         try {
-            testWriter.write(testCalendar,"data\\TestEmptySaveFile.json");
-            testCalendar = testReader.read("data\\TestEmptySaveFile.json");
+            testWriter.write(testCalendar,"data/TestEmptySaveFile.json");
+            testCalendar = testReader.read("data/TestEmptySaveFile.json");
             assertEquals("test", testCalendar.getName());
             assertEquals(0, testCalendar.getDaysOfWeek().get(0).getItems().size());
             assertEquals(0, testCalendar.getDaysOfWeek().get(1).getItems().size());
@@ -54,8 +54,8 @@ public class TestJsonWriter {
         testCalendar.getDaysOfWeek().get(0).addItem(new CalendarItem("SCIE113", LocalTime.of(13,0), LocalTime.of(14,0), "LSK"));
         testCalendar.getDaysOfWeek().get(2).addItem(new CalendarItem("MATH101", LocalTime.of(14,0), LocalTime.of(16,0), "WESB"));
         try {
-            testWriter.write(testCalendar, "data\\TestRealSaveFile.json");
-            testCalendar = testReader.read("data\\TestRealSaveFile.json");
+            testWriter.write(testCalendar, "data/TestRealSaveFile.json");
+            testCalendar = testReader.read("data/TestRealSaveFile.json");
             assertEquals("test", testCalendar.getName());
             assertEquals(2, testCalendar.getDaysOfWeek().get(0).getItems().size());
             assertEquals("CPSC210", testCalendar.getDaysOfWeek().get(0).getItemAt(0).getName());
