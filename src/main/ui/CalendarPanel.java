@@ -5,18 +5,16 @@ import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import exceptions.InvalidTime;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -25,14 +23,19 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 import model.Calendar;
 import model.CalendarItem;
 import model.Day;
+import persistance.JsonReader;
+import persistance.JsonWriter;
 
 public class CalendarPanel {
+    JsonWriter writer;
+    JsonReader reader;
     JFrame calendarFrame;
     JPanel newCalendarPanel;
     JMenuBar menuBar;
@@ -72,6 +75,8 @@ public class CalendarPanel {
     // MODIFIES: this
     // EFFECTS: Creates the calendar window when no calendar is active
     public CalendarPanel() {
+        writer = new JsonWriter();
+        reader = new JsonReader();
         calendarFrame = new JFrame("Calendar");
         calendarFrame.setSize(frameWidth, frameHeight);
         calendarFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -108,6 +113,7 @@ public class CalendarPanel {
         });
         loadItem.addActionListener(e -> {
             loadCalendar();
+            calendarFrame.remove(mainPanel);
             runCalendar();
         });
     }
@@ -143,13 +149,29 @@ public class CalendarPanel {
     // REQUIRES: a calendar to be loaded in
     // EFFECTS: Saves the current calendar to file
     private void saveCalendar() {
-        JOptionPane.showMessageDialog(null, "Save");
+        JOptionPane.showMessageDialog(calendarFrame, "Saving with file name: " + calendar.getName() + "\n Use this file name to retrieve this save");
+        try {
+            writer.write(calendar, "data/" + calendar.getName() + ".json");
+        } catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(calendarFrame, "An error occured.");
+        }
     }
 
     // MODIFIES: this, calendar
     // EFFECTS: Loads a calendar from file
     private void loadCalendar() {
-        JOptionPane.showMessageDialog(null, "Load");
+        JLabel loadLabel = new JLabel("Enter name of calendar or file name given during save");
+        JTextField loadText = new JTextField(10);
+        JPanel loadPanel = new JPanel();
+        loadPanel.add(loadLabel);
+        loadPanel.add(loadText);
+        JOptionPane.showMessageDialog(calendarFrame, loadPanel);
+        try {
+            calendar = reader.read("data/"  + loadText.getText() + ".json");
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(calendarFrame, "An error occured.");
+        }
+        
     }
 
     // MODIFIES: this
@@ -171,12 +193,13 @@ public class CalendarPanel {
         setupCalendar();
         drawCalendar();
         newCalendarItem.addActionListener(e -> {
-            newItem();
-            calendarFrame.remove(mainPanel);
-            drawCalendar();
-        });
-        editCalendarItem.addActionListener(e -> {
-            editItem();
+            try {
+                newItem();
+            } catch (InvalidTime e1) {
+                JOptionPane.showMessageDialog(calendarFrame, "Invalid time selected!");
+            } catch (NumberFormatException e1) {
+                JOptionPane.showMessageDialog(calendarFrame, "Invalid inputs");
+            }
             calendarFrame.remove(mainPanel);
             drawCalendar();
         });
@@ -192,17 +215,129 @@ public class CalendarPanel {
 
     // MODIFIES: this, calendar
     // EFFECTS: Method to add a new item to calendar
-    private void newItem() {
+    private void newItem() throws InvalidTime, NumberFormatException {
         makeDialogueNewItem();
-        addInterfaceNewItem();
+        addInterfaceItem();
         int result = JOptionPane.showConfirmDialog(calendarFrame, newItemPanel, "Enter Item Details", 2);
         if (result == JOptionPane.OK_OPTION) {
+            if (LocalTime.parse(endText.getText().trim(), format)
+                    .isBefore(LocalTime.parse(endText.getText().trim(), format))) {
+                throw new InvalidTime();
+            }
             String days = convertDays();
             days = String.join(",", days.split("")).trim();
             calendar.applyCourseToEachDay(days, nameItemText.getText(),
                     LocalTime.parse(startText.getText().trim(), format),
                     LocalTime.parse(endText.getText().trim(), format), locationText.getText());
         }
+    }
+
+    // MODIFIES: this, calendar
+    // EFFECTS: Method to edit an existing item on the calendar
+    private void editItem(CalendarItem item) throws InvalidTime {
+        makeDialogueEditItem();
+        addInterfaceItem();
+        JCheckBox same = new JCheckBox("Use same days of week");
+        JCheckBox remove = new JCheckBox("Delete this item (overrides anything else on this page)");
+        newItemPanel.add(same);
+        newItemPanel.add(remove);
+        int result = JOptionPane.showConfirmDialog(calendarFrame, newItemPanel, "Enter Item Details", 2);
+        if (result == JOptionPane.OK_OPTION) {
+            if (remove.isSelected()) {
+                calendar.removeItem(item.getName());
+            } else {
+                CalendarItem newItem = new CalendarItem(item.getName(), item.getStartTime(), item.getEndTime(),
+                        item.getLocation());
+                newItem = convertToItem(newItem);
+                if (same.isSelected()) {
+                    calendar.changeItemInfo(item.getName(), newItem);
+                } else {
+                    String days = convertDays();
+                    days = String.join(",", days.split("")).trim();
+                    calendar.changeDays(item.getName(), newItem, days);
+                }
+            }
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: Creates the pop-up for user to input new item information
+    private void makeDialogueNewItem() {
+        newItemPanel = new JPanel(new GridLayout(0, 2, 5, 5));
+        daysLabel = new JLabel("Select days of week of item");
+        mon = new JCheckBox("Monday");
+        tue = new JCheckBox("Tuesday");
+        wed = new JCheckBox("Wednesday");
+        thu = new JCheckBox("Thursday");
+        fri = new JCheckBox("Friday");
+        nameItemLabel = new JLabel("Enter name of item");
+        nameItemText = new JTextField(10);
+        startLabel = new JLabel("\nEnter starting time, in HH:mm form");
+        startText = new JTextField(5);
+        endLabel = new JLabel("Enter ending time, in HH:mm form");
+        endText = new JTextField(5);
+        locationLabel = new JLabel("Enter location");
+        locationText = new JTextField(10);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: adds items to pop-up for user to input item information
+    private void addInterfaceItem() {
+        newItemPanel.add(daysLabel);
+        newItemPanel.add(mon);
+        newItemPanel.add(tue);
+        newItemPanel.add(wed);
+        newItemPanel.add(thu);
+        newItemPanel.add(fri);
+        newItemPanel.add(nameItemLabel);
+        newItemPanel.add(nameItemText);
+        newItemPanel.add(startLabel);
+        newItemPanel.add(startText);
+        newItemPanel.add(endLabel);
+        newItemPanel.add(endText);
+        newItemPanel.add(locationLabel);
+        newItemPanel.add(locationText);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: Creates the pop-up for user to input edited item information
+    private void makeDialogueEditItem() {
+        newItemPanel = new JPanel(new GridLayout(0, 2, 5, 5));
+        daysLabel = new JLabel("Select days of week of item (select check box at bottom for same)");
+        mon = new JCheckBox("Monday");
+        tue = new JCheckBox("Tuesday");
+        wed = new JCheckBox("Wednesday");
+        thu = new JCheckBox("Thursday");
+        fri = new JCheckBox("Friday");
+        nameItemLabel = new JLabel("Enter name of item (leave blank for same)");
+        nameItemText = new JTextField(10);
+        startLabel = new JLabel("\nEnter starting time, in HH:mm form (leave blank for same)");
+        startText = new JTextField(5);
+        endLabel = new JLabel("Enter ending time, in HH:mm form (leave blank for same)");
+        endText = new JTextField(5);
+        locationLabel = new JLabel("Enter location (leave blank for same)");
+        locationText = new JTextField(10);
+    }
+
+    // MODIFIES: this, newItem
+    // EFFECTS: Helper method to edit an existing item on calendar
+    private CalendarItem convertToItem(CalendarItem newItem) throws InvalidTime {
+        if (!(nameItemText.getText().trim().equals(""))) {
+            newItem.changeName(nameItemText.getText().trim());
+        }
+        if (!(startText.getText().trim().equals(""))) {
+            newItem.changeStartTime(LocalTime.parse(startText.getText().trim(), format));
+        }
+        if (!(endText.getText().trim().equals(""))) {
+            newItem.changeEndTime(LocalTime.parse(endText.getText().trim(), format));
+        }
+        if (newItem.getEndTime().isBefore(newItem.getStartTime())) {
+            throw new InvalidTime();
+        }
+        if (!(locationText.getText().trim().equals(""))) {
+            newItem.changeLocation(locationText.getText().trim());
+        }
+        return newItem;
     }
 
     // MODIFIES: this
@@ -227,51 +362,6 @@ public class CalendarPanel {
         return days;
     }
 
-    // MODIFIES: this
-    // EFFECTS: Creates the pop-up for user to input new item information
-    private void makeDialogueNewItem() {
-        newItemPanel = new JPanel(new GridLayout(0, 2, 5, 5));
-        daysLabel = new JLabel("Select days of week of item");
-        mon = new JCheckBox("Monday");
-        tue = new JCheckBox("Tuesday");
-        wed = new JCheckBox("Wednesday");
-        thu = new JCheckBox("Thursday");
-        fri = new JCheckBox("Friday");
-        nameItemLabel = new JLabel("Enter name of item");
-        nameItemText = new JTextField(10);
-        startLabel = new JLabel("\nEnter starting time, in HH:mm form");
-        startText = new JTextField(5);
-        endLabel = new JLabel("Enter ending time, in HH:mm form");
-        endText = new JTextField(5);
-        locationLabel = new JLabel("Enter location");
-        locationText = new JTextField(10);
-    }
-
-    // MODIFIES: this
-    // EFFECTS: adds items to pop-up for user to input new item information
-    private void addInterfaceNewItem() {
-        newItemPanel.add(daysLabel);
-        newItemPanel.add(mon);
-        newItemPanel.add(tue);
-        newItemPanel.add(wed);
-        newItemPanel.add(thu);
-        newItemPanel.add(fri);
-        newItemPanel.add(nameItemLabel);
-        newItemPanel.add(nameItemText);
-        newItemPanel.add(startLabel);
-        newItemPanel.add(startText);
-        newItemPanel.add(endLabel);
-        newItemPanel.add(endText);
-        newItemPanel.add(locationLabel);
-        newItemPanel.add(locationText);
-    }
-
-    // MODIFIES: this, calendar
-    // EFFECTS: Method to edit an existing item on the calendar
-    private void editItem() {
-
-    }
-
     // MODIFIES: this, calendar
     // EFFECTS: Method to edit the name of the calendar
     private void editName() {
@@ -286,14 +376,13 @@ public class CalendarPanel {
         }
     }
 
-    // EFFECTS: Sets up calendar UI by modifying initial calendar UI when no calendar is loaded in
+    // EFFECTS: Sets up calendar UI by modifying initial calendar UI when no
+    // calendar is loaded in
     private void setupCalendar() {
         fileMenu.add(saveItem);
         newCalendarItem = new JMenuItem("New Item");
-        editCalendarItem = new JMenuItem("Edit Item");
         changeCalendarName = new JMenuItem("Change Calendar Name");
         editMenu.add(newCalendarItem);
-        editMenu.add(editCalendarItem);
         editMenu.add(changeCalendarName);
         menuBar.add(editMenu);
         calendarFrame.remove(welcomeLabel);
@@ -336,8 +425,17 @@ public class CalendarPanel {
                 JButton button = new JButton("<html>" + item.getName() + "<br>"
                         + item.getStartTime().toString() + "-" + item.getEndTime().toString() + "<br>"
                         + item.getLocation());
-                button.setEnabled(false);
-                button.setBackground(Color.BLUE);
+                // button.setEnabled(false);
+                button.addActionListener(e -> {
+                    try {
+                        editItem(item);
+                        calendarFrame.remove(mainPanel);
+                        drawCalendar();
+                    } catch (InvalidTime e1) {
+                        JOptionPane.showMessageDialog(calendarFrame, "Invalid time selected!");
+                    }
+                });
+                button.setBackground(Color.CYAN);
                 mainPanel.add(button, c);
             }
         }
