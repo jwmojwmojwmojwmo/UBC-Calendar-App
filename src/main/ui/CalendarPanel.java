@@ -113,7 +113,11 @@ public class CalendarPanel {
         });
         loadItem.addActionListener(e -> {
             loadCalendar();
-            calendarFrame.remove(mainPanel);
+            try {
+                calendarFrame.remove(mainPanel);
+            } catch (NullPointerException e1) {
+        
+            }
             runCalendar();
         });
     }
@@ -149,7 +153,8 @@ public class CalendarPanel {
     // REQUIRES: a calendar to be loaded in
     // EFFECTS: Saves the current calendar to file
     private void saveCalendar() {
-        JOptionPane.showMessageDialog(calendarFrame, "Saving with file name: " + calendar.getName() + "\n Use this file name to retrieve this save");
+        JOptionPane.showMessageDialog(calendarFrame,
+                "Saving with file name: " + calendar.getName() + "\n Use this file name to retrieve this save");
         try {
             writer.write(calendar, "data/" + calendar.getName() + ".json");
         } catch (FileNotFoundException e) {
@@ -165,13 +170,15 @@ public class CalendarPanel {
         JPanel loadPanel = new JPanel();
         loadPanel.add(loadLabel);
         loadPanel.add(loadText);
-        JOptionPane.showMessageDialog(calendarFrame, loadPanel);
-        try {
-            calendar = reader.read("data/"  + loadText.getText() + ".json");
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(calendarFrame, "An error occured.");
+        int result = JOptionPane.showConfirmDialog(calendarFrame, loadPanel, "Load Calendar", 2);
+        if (result == JOptionPane.OK_OPTION) {
+            try {
+                calendar = reader.read("data/" + loadText.getText() + ".json");
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(calendarFrame,
+                        "An error occured. Most likely the file name is incorrect.");
+            }
         }
-        
     }
 
     // MODIFIES: this
