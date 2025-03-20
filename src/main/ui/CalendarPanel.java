@@ -436,9 +436,8 @@ public class CalendarPanel {
                 c.gridy = atHalfHour ? item.getStartTime().getHour() + 2 : item.getStartTime().getHour() + 1;
                 c.gridheight = atHalfHour ? item.getEndTime().getHour() - item.getStartTime().getHour() - 1
                         : item.getEndTime().getHour() - item.getStartTime().getHour();
-                JButton button = new JButton("<html>" + item.getName() + "<br>"
-                        + item.getStartTime().toString() + "-" + item.getEndTime().toString() + "<br>"
-                        + item.getLocation());
+                JButton button = new JButton("<html>" + item.getName() + "<br>" + item.getStartTime().toString() + "-"
+                        + item.getEndTime().toString() + "<br>" + item.getLocation());
                 button.addActionListener(e -> {
                     try {
                         editItem(item);
