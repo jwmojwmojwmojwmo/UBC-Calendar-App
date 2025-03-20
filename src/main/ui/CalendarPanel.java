@@ -2,6 +2,7 @@ package ui;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -12,6 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import exceptions.InvalidTime;
@@ -22,6 +24,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalTime;
@@ -112,11 +116,12 @@ public class CalendarPanel {
             }
         });
         loadItem.addActionListener(e -> {
-            loadCalendar();
             try {
+                loadCalendar();
                 calendarFrame.remove(mainPanel);
-            } catch (NullPointerException e1) {
-        
+
+            } catch (Exception e1) {
+                // Do nothing
             }
             runCalendar();
         });
@@ -174,7 +179,7 @@ public class CalendarPanel {
         if (result == JOptionPane.OK_OPTION) {
             try {
                 calendar = reader.read("data/" + loadText.getText() + ".json");
-            } catch (IOException e) {
+            } catch (Exception e) {
                 JOptionPane.showMessageDialog(calendarFrame,
                         "An error occured. Most likely the file name is incorrect.");
             }
@@ -244,7 +249,7 @@ public class CalendarPanel {
     private void editItem(CalendarItem item) throws InvalidTime {
         makeDialogueEditItem();
         addInterfaceItem();
-        JCheckBox same = new JCheckBox("Use same days of week");
+        JCheckBox same = new JCheckBox("Use same days of week (must press this if you are keeping same days)");
         JCheckBox remove = new JCheckBox("Delete this item (overrides anything else on this page)");
         newItemPanel.add(same);
         newItemPanel.add(remove);
@@ -402,11 +407,11 @@ public class CalendarPanel {
         mainPanel = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.BOTH;
-        c.insets = new Insets(0, 60, 15, 60);
-        for (int i = 0; i <= 23; i++) {
+        c.insets = new Insets(0, 60, 30, 60);
+        for (int i = 5; i <= 23; i++) {
             c.gridx = 0;
             c.gridy = i + 1;
-            mainPanel.add(new JLabel(Integer.toString(i) + ":00"), c);
+            mainPanel.add(new JLabel(i + ":00"), c);
         }
         String[] headers = { "Time", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" };
         for (int i = 0; i < headers.length; i++) {
@@ -414,6 +419,7 @@ public class CalendarPanel {
             c.gridy = 0;
             mainPanel.add(new JLabel(headers[i]), c);
         }
+        c.insets = new Insets(0, 0, 0, 0);
         drawItemsToCalendar(c);
         calendarFrame.add(mainPanel);
         calendarFrame.revalidate();
@@ -423,16 +429,16 @@ public class CalendarPanel {
     // MODIFIES: this
     // EFFECTS: helper method that draws items onto the calendar ui
     private void drawItemsToCalendar(GridBagConstraints c) {
-        c.insets = new Insets(0, 0, 0, 0);
         for (Day day : calendar.getDaysOfWeek()) {
             for (CalendarItem item : day.getItems()) {
+                boolean atHalfHour = item.getStartTime().getMinute() == 30;
                 c.gridx = day.getDay().getValue();
-                c.gridy = item.getStartTime().getHour() + 1;
-                c.gridheight = item.getEndTime().getHour() - item.getStartTime().getHour();
+                c.gridy = atHalfHour ? item.getStartTime().getHour() + 2 : item.getStartTime().getHour() + 1;
+                c.gridheight = atHalfHour ? item.getEndTime().getHour() - item.getStartTime().getHour() - 1
+                        : item.getEndTime().getHour() - item.getStartTime().getHour();
                 JButton button = new JButton("<html>" + item.getName() + "<br>"
                         + item.getStartTime().toString() + "-" + item.getEndTime().toString() + "<br>"
                         + item.getLocation());
-                // button.setEnabled(false);
                 button.addActionListener(e -> {
                     try {
                         editItem(item);
@@ -442,9 +448,25 @@ public class CalendarPanel {
                         JOptionPane.showMessageDialog(calendarFrame, "Invalid time selected!");
                     }
                 });
-                button.setBackground(Color.CYAN);
+                changeColour(button);
+                button.setBackground(Color.WHITE);
                 mainPanel.add(button, c);
             }
         }
+    }
+
+    // MODIFIES: button
+    // EFFECTS: changes colour of button
+    private void changeColour(JButton button) {
+        button.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    Color selectedColor = JColorChooser.showDialog(button, "Choose a Color", button.getBackground());
+                    if (selectedColor != null) {
+                        button.setBackground(selectedColor);
+                    }
+                }
+            }
+        });
     }
 }
