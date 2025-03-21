@@ -168,6 +168,7 @@ public class CalendarPanel {
     }
 
     // MODIFIES: this, calendar
+    // REQUIRES: no other calender has been loaded in
     // EFFECTS: Loads a calendar from file
     private void loadCalendar() {
         JLabel loadLabel = new JLabel("Enter name of calendar or file name given during save");
@@ -245,6 +246,7 @@ public class CalendarPanel {
     }
 
     // MODIFIES: this, calendar
+    // REQUIRES: correct days of week to be checked or same days of week checkbox checked
     // EFFECTS: Method to edit an existing item on the calendar
     private void editItem(CalendarItem item) throws InvalidTime {
         makeDialogueEditItem();
@@ -408,8 +410,8 @@ public class CalendarPanel {
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.BOTH;
         c.insets = new Insets(0, 60, 30, 60);
+        c.gridx = 0;
         for (int i = 5; i <= 23; i++) {
-            c.gridx = 0;
             c.gridy = i + 1;
             mainPanel.add(new JLabel(i + ":00"), c);
         }
