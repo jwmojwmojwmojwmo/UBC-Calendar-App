@@ -390,6 +390,7 @@ public class CalendarPanel {
         }
     }
 
+    // MODIFIES: this
     // EFFECTS: Sets up calendar UI by modifying initial calendar UI when no
     // calendar is loaded in
     private void setupCalendar() {
