@@ -18,8 +18,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import exceptions.InvalidTime;
 
-import static org.junit.jupiter.api.DynamicTest.stream;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -31,7 +29,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
