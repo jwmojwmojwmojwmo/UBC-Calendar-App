@@ -22,6 +22,7 @@ public class CalendarItem {
     // MODIFIES: this
     // EFFECTS: changes name of item to given name
     public void changeName(String name) {
+        EventLog.getInstance().logEvent(new Event("Changed " + this.name + "'s name to " + name));
         this.name = name;
     }
 
@@ -30,6 +31,7 @@ public class CalendarItem {
     // EFFECTS: changes start time of item to given time
     public void changeStartTime(LocalTime time) {
         startTime = time;
+        EventLog.getInstance().logEvent(new Event("Changed " + this.name + "'s start time to " + time));
     }
 
     // MODIFIES: this
@@ -37,12 +39,14 @@ public class CalendarItem {
     // EFFECTS: changes end time of item to given time
     public void changeEndTime(LocalTime time) {
         endTime = time;
+        EventLog.getInstance().logEvent(new Event("Changed " + this.name + "'s end time to " + time));
     }
 
     // MODIFIES: this
     // EFFECTS: changes location to given location
     public void changeLocation(String location) {
         this.location = location;
+        EventLog.getInstance().logEvent(new Event("Changed " + this.name + "'s location to " + location));
     }
 
     // MODIFIES: JsonWriter

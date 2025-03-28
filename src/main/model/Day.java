@@ -23,6 +23,7 @@ public class Day {
     public void addItem(CalendarItem item) {
         items.add(item);
         items.sort(Comparator.comparing(CalendarItem::getStartTime));
+        EventLog.getInstance().logEvent(new Event(item.getName() + " added to " + day));
     }
 
     // MODIFIES: this
@@ -30,6 +31,7 @@ public class Day {
     // EFFECTS: removes item from this day
     public void removeItem(CalendarItem item) {
         items.remove(item);
+        EventLog.getInstance().logEvent(new Event(item.getName() + " removed from " + day));
     }
 
     // MODIFIES: this
@@ -37,6 +39,7 @@ public class Day {
     // EFFECTS: removes item at given index from this day
     public void removeItem(int index) {
         items.remove(index);
+        EventLog.getInstance().logEvent(new Event("item at index " + index + " removed from " + day));
     }
 
     // EFFECTS: returns the item at the given day and time, or returns "Nothing
@@ -71,6 +74,7 @@ public class Day {
     // EFFECTS: removes all items in this day
     public void removeAll() {
         items = new ArrayList<CalendarItem>();
+        EventLog.getInstance().logEvent(new Event("Removed all items from " + day));
     }
 
     // MODIFIES: JsonWriter

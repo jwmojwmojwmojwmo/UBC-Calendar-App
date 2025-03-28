@@ -121,6 +121,7 @@ public class Calendar {
     // EFFECTS: changes Calendar name to given name
     public void changeName(String name) {
         this.name = name;
+        EventLog.getInstance().logEvent(new Event("Changed calendar name to " + name));
     }
 
     public String getName() {
