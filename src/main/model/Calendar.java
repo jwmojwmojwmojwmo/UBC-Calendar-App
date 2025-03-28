@@ -24,6 +24,7 @@ public class Calendar {
         daysOfWeek.add(new Day(DayOfWeek.WEDNESDAY));
         daysOfWeek.add(new Day(DayOfWeek.THURSDAY));
         daysOfWeek.add(new Day(DayOfWeek.FRIDAY));
+        EventLog.getInstance().logEvent(new Event("New calendar made named " + name));
     }
     
     // MOFDIFIES: this, Day

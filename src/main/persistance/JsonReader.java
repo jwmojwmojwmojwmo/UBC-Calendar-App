@@ -12,6 +12,8 @@ import org.json.JSONObject;
 import model.Calendar;
 import model.CalendarItem;
 import model.Day;
+import model.Event;
+import model.EventLog;
 
 //Represents a tool that reads a JSON file into a calendar
 public class JsonReader {
@@ -25,6 +27,7 @@ public class JsonReader {
     // in the form of a calendar
     public Calendar read(String filePath) throws IOException {
         String content = Files.readString(Paths.get(filePath));
+        EventLog.getInstance().logEvent(new Event("Loading calendar from " + filePath));
         JSONObject jsonContent = new JSONObject(content);
         JSONObject item;
         JSONArray arrayOfItems;

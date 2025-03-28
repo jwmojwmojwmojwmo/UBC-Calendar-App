@@ -18,6 +18,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import exceptions.InvalidTime;
 
+import static org.junit.jupiter.api.DynamicTest.stream;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -26,6 +28,8 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalTime;
@@ -34,6 +38,8 @@ import java.time.format.DateTimeFormatter;
 import model.Calendar;
 import model.CalendarItem;
 import model.Day;
+import model.Event;
+import model.EventLog;
 import persistance.JsonReader;
 import persistance.JsonWriter;
 
@@ -83,7 +89,7 @@ public class CalendarPanel {
         reader = new JsonReader();
         calendarFrame = new JFrame("Calendar");
         calendarFrame.setSize(frameWidth, frameHeight);
-        calendarFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        calendarFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         calendarFrame.setLayout(new BorderLayout());
         menuBar = new JMenuBar();
         fileMenu = new JMenu("File");
@@ -100,7 +106,24 @@ public class CalendarPanel {
         calendarFrame.setJMenuBar(menuBar);
         calendarFrame.add(welcomeLabel);
         calendarFrame.setVisible(true);
+        addLoggerCalendar();
         startCalendar();
+    }
+
+    // MODIFIES: this
+    // EFFECTS: adds a windowlistener and event logger
+    private void addLoggerCalendar() {
+        calendarFrame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                for (Event event : EventLog.getInstance()) {  
+                    System.out.println();  
+                    System.out.println(event);
+                }
+                calendarFrame.dispose();
+                System.exit(0);
+            }
+        });
     }
 
     // MODIFIES: this
@@ -246,7 +269,8 @@ public class CalendarPanel {
     }
 
     // MODIFIES: this, calendar
-    // REQUIRES: correct days of week to be checked or same days of week checkbox checked
+    // REQUIRES: correct days of week to be checked or same days of week checkbox
+    // checked
     // EFFECTS: Method to edit an existing item on the calendar
     private void editItem(CalendarItem item) throws InvalidTime {
         makeDialogueEditItem();

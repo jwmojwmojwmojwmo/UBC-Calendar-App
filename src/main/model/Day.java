@@ -23,7 +23,9 @@ public class Day {
     public void addItem(CalendarItem item) {
         items.add(item);
         items.sort(Comparator.comparing(CalendarItem::getStartTime));
-        EventLog.getInstance().logEvent(new Event(item.getName() + " added to " + day));
+        EventLog.getInstance().logEvent(new Event(item.getName() + " added to " + day
+                + " with time slot " + item.getStartTime() + "-" + item.getEndTime() + " at location: "
+                + item.getLocation()));
     }
 
     // MODIFIES: this
@@ -38,8 +40,8 @@ public class Day {
     // REQUIRES: index exists in day
     // EFFECTS: removes item at given index from this day
     public void removeItem(int index) {
+        EventLog.getInstance().logEvent(new Event(items.get(index).getName() + " removed from " + day));
         items.remove(index);
-        EventLog.getInstance().logEvent(new Event("item at index " + index + " removed from " + day));
     }
 
     // EFFECTS: returns the item at the given day and time, or returns "Nothing
@@ -54,7 +56,6 @@ public class Day {
         return "Nothing found!";
     }
 
-    
     public CalendarItem getItemAt(int index) {
         return items.get(index);
     }
@@ -63,7 +64,7 @@ public class Day {
     // or returns -1
     public Integer getItemCalled(String name) {
         for (int i = 0; i < getItems().size(); i++) {
-            if (getItems().get(i).getName().equals(name)) {     
+            if (getItems().get(i).getName().equals(name)) {
                 return i;
             }
         }

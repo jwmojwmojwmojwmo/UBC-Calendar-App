@@ -30,3 +30,37 @@ User Stories:
 - You can locate my visual component by using the GUI to see a visualisation of when each items are each day.
 - You can save the state of my application by going to File -> Save, which will save the calendar using the calendar's name. To change the calendar's name, go to Edit -> Change Calendar Name.
 - You can reload the state of my application by going to File -> Load, which will load the calendar using the calendar's name.
+
+# Phase 4: Part 2
+Thu Mar 27 23:28:16 PDT 2025
+New calendar made named CalendarDemo
+
+Thu Mar 27 23:28:26 PDT 2025
+DemoItem added to MONDAY with time slot 12:00-13:00 at location: Right Here
+
+Thu Mar 27 23:28:41 PDT 2025
+Changed DemoItem's start time to 14:00
+
+Thu Mar 27 23:28:41 PDT 2025
+Changed DemoItem's end time to 17:00
+
+Thu Mar 27 23:28:41 PDT 2025
+Changed DemoItem's location to Somewhere Else
+
+Thu Mar 27 23:28:48 PDT 2025
+DemoItem removed from MONDAY
+
+Thu Mar 27 23:28:48 PDT 2025
+Another Item added to TUESDAY with time slot 14:00-17:00 at location: Somewhere Else
+
+Thu Mar 27 23:28:48 PDT 2025
+Another Item added to THURSDAY with time slot 14:00-17:00 at location: Somewhere Else
+
+Thu Mar 27 23:28:50 PDT 2025
+Another Item removed from TUESDAY
+
+Thu Mar 27 23:28:50 PDT 2025
+Another Item removed from THURSDAY
+
+Thu Mar 27 23:28:54 PDT 2025
+Saving calendar to data/CalendarDemo.json
