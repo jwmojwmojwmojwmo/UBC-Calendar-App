@@ -3,6 +3,8 @@ package ui;
 import model.Calendar;
 import model.CalendarItem;
 import model.Day;
+import model.Event;
+import model.EventLog;
 import persistance.JsonReader;
 import persistance.JsonWriter;
 
@@ -84,7 +86,7 @@ public class CalendarApp {
             }
         } while (!validInput);
     }
-    
+
     // MODIFIES: this, Day, CalendarItem, Calendar
     // EFFECTS: displays available commands and gets next input from user
     @SuppressWarnings("methodlength")
@@ -152,6 +154,10 @@ public class CalendarApp {
         System.out.println("Would you like to save the calendar? Y for yes, anything else for no.");
         if (userInput.nextLine().toUpperCase().equals("Y")) {
             saveCalendar();
+        }
+        for (Event event : EventLog.getInstance()) {
+            System.out.println();
+            System.out.println(event);
         }
         System.exit(0);
     }
