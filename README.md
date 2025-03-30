@@ -64,3 +64,7 @@ Another Item removed from THURSDAY
 
 Thu Mar 27 23:28:54 PDT 2025
 Saving calendar to data/CalendarDemo.json
+
+# Phase 4: Part 3
+
+If I had more time to work on this project, I would refactor the relationship between Day and CalendarItem to be a bidirectional relationship. At the time, we had not yet learned about how to implement bi-directional relationships, so I didn't really see it as an option. Because of this, in my program, Day has a list of CalendarItems, but CalendarItem does not have field of type Day. This creates many problems that I had to make a workaround for. For example, if I had an item that was in multiple days, removing it was very difficult to implement. It required me to delete the item from the CalendarItem list for each Day that contained the item, but there was no easy way to find what days the item was in as it does not have any fields of type Day. The only way I thought of was to iterate through every Day to check if the day contained the item, and then remove the item if so. There were many cases similar to this, such as editing an item, which is why I would refactor the relationship into a bidirectional one.

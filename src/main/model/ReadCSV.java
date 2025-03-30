@@ -28,7 +28,7 @@ public class ReadCSV {
         courseName = name.substring(0, name.indexOf("-", name.indexOf("-") + 1)).trim();
         courseInfo = info;
         courseDays = new ArrayList<DayOfWeek>();
-        this.daysOfWeek = daysOfWeek;
+        this.daysOfWeek = daysOfWeek;   
     }
 
     // MODIFIES: this, Calendar, Day, CalendarItem
