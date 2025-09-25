@@ -2,11 +2,15 @@
 
 ## The UBC Weekly Calendar
 
-This application will allow the user to upload their list of courses provided by Workday, and will auto-generate a weekly calendar, showing class times for each day, as well as a map that visualises where each class is. It is also able to detect classes that may be too close together in time, and give a warning. The user can also add extracurriculars, and the calendar will display this too.  
+Made for a UBC CPSC class.
+
+This application will allow the user to upload their list of courses provided by Workday, and will auto-generate a weekly calendar, showing class times for each day. The user can also add extracurriculars or other blocks of time as they wish, and the calendar will display this too.  
 
 Any UBC student who wants a fast and easy to use calendar for their classes each day can use this program. 
 
 This project is of interest to me as I have found that using Workday to find classes each day is extremely painful, and I was making a calendar for my first year manually. This way, I can automate the process for the rest of my time here. It also does not require internet except for the initial download from Workday, which will be helpful if I do not have connection as I walk across campus.
+
+Note: this program does not differentiate between classes in different terms, and cannot parse a class that occurs at different times and different days (ex. A class called CPSC200 at Tuesday 9-10 and Thursday 10-12 will not work, but if it was Tuesday and Thursday, both at 10-12, it will). This is due to the limitations of the Workday generated CSV file that I could not have been aware of until September 2025, and this project ended in May 2025. In the future, this may be fixed, but any new updates to Workday's CSV generation will break the program again.  
 
 User Stories:
 - As a user, I want to see exactly what classes I have each day.
